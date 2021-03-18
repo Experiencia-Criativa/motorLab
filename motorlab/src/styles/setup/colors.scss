@@ -1,0 +1,29 @@
+$primary: #f6ab73;
+$secondary: #727376;
+$accentColor: #7C4DFF;
+$background-color: #f0f0f5;
+$main-color: #fff;
+$error: #b71c1c;
+$detail: #c5c5c5;
+$success: #4BB543;
+$dark-background-color: #121212;
+$dark-main-color: #1e1e1e;
+
+$theme-colors: (
+  'primary': $primary,
+  'secondary': $secondary,
+  'accentColor': $accentColor,
+  'backgroundColor': $background-color,
+  'mainColor': $main-color,
+  'error': $error,
+  'detail': $detail,
+  'success': $success,
+  'darkBackgroundColor': $dark-background-color,
+  'darkMainColor': $dark-main-color,
+);
+
+:export {
+  @each $key, $value in $theme-colors {
+    #{unquote($key)}: $value;
+  }
+}
