@@ -12,34 +12,18 @@
       >
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
-      <v-select
-        v-model="type"
-        :items="types"
-        dense
+      <v-btn
         outlined
-        hide-details
         class="ma-2"
-        label="type"
-      ></v-select>
-      <v-select
-        v-model="mode"
-        :items="modes"
-        dense
-        outlined
-        hide-details
-        label="event-overlap-mode"
-        class="ma-2"
-      ></v-select>
-      <v-select
-        v-model="weekday"
-        :items="weekdays"
-        dense
-        outlined
-        hide-details
-        label="weekdays"
-        class="ma-2"
-      ></v-select>
+        color="grey darken-2"
+        @click="setToday"
+      >
+        Hoje
+      </v-btn>
       <v-spacer></v-spacer>
+      <v-toolbar-title style="margin-top: 12px" v-if="$refs.calendar">
+        {{ $refs.calendar.title }}
+      </v-toolbar-title>
       <v-btn
         icon
         class="ma-2"
@@ -51,13 +35,14 @@
     <v-sheet height="750">
       <v-calendar
         ref="calendar"
-        v-model="value"
+        v-model="focus"
         :weekdays="weekday"
+        :first-interval="8"
+        :interval-count="16"
         :type="type"
         :events="events"
         :event-overlap-mode="mode"
         :event-overlap-threshold="60"
-        @change="getEvents"
         @click:date="type === 'month' ? viewDay($event) : type = 'month'"
       ></v-calendar>
     </v-sheet>
@@ -68,6 +53,7 @@
   import moment from 'moment'
   export default {
     data: () => ({
+      focus: '',
       type: 'day',
       types: ['month', 'week', 'day'],
       mode: 'stack',
@@ -79,20 +65,20 @@
         { text: 'Mon - Fri', value: [1, 2, 3, 4, 5] },
         { text: 'Mon, Wed, Fri', value: [1, 3, 5] },
       ],
-      value: '',
       events: [],
     }),
+    beforeMount () {
+      this.getEvents()
+    },
     methods: {
       getEvents () {
-        const events = []
-          events.push({
+          this.events.push({
             name: 'Nome do Evento',
             start: moment().format('YYYY-MM-DD hh:mm'),
             end: moment().format('YYYY-MM-DD hh:mm'),
-            color: '#ff0000',
+            color: 'rgb(218 12 12)',
             timed: 1,
           })
-        this.events = events
       },
       rnd (a, b) {
         return Math.floor((b - a + 1) * Math.random()) + a
@@ -100,6 +86,9 @@
        viewDay ({ date }) {
         this.focus = date
         this.type = 'day'
+      },
+      setToday () {
+        this.focus = ''
       },
     },
   }

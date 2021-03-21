@@ -1,7 +1,8 @@
 <template>
   <div>
     <v-app-bar
-      color="pink darken-3"
+      color="#3a6a9a"
+      fixed
       dense
       dark
     >

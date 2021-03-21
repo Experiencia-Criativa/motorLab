@@ -1,6 +1,6 @@
 <template>
     <v-app>
-    <top-Bar/>
+    <top-Bar style="z-index: 2"/>
     <side-Bar class="sideBar"/>
     <router-view  class="router"/>
     <bottom-bar class="bottomBar"/>
@@ -24,14 +24,23 @@ export default {
 .sideBar{
   position: fixed; 
   left: 0px; 
-  top: 48px; 
+  top: 0px; 
   height: 100%
 }
 .router{
-  padding: 10px 0px 10px 45px;
+  padding: 55px 0px 10px 55px;
 }
 .bottomBar{
   position: fixed; 
   bottom: 0px
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment  {
+	display: none;
 }
 </style>
