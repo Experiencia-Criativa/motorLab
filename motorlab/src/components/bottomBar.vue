@@ -20,10 +20,8 @@
   </v-bottom-navigation>
 </template>
 <script>
-  export default {
-    data: () => ({ value: 'recent' }),
-  }
+export default {
+  data: () => ({ value: "recent" }),
+};
 </script>
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
