@@ -5,7 +5,7 @@
       <v-card>
         <v-card-title>
           Clientes
-          <v-btn color="#333" icon text @click="addClient">
+          <v-btn color="#333" icon text @click="openForm">
             <v-icon> add </v-icon>
           </v-btn>
         </v-card-title>
@@ -27,8 +27,8 @@
             ></v-text-field>
 
             <v-text-field
-              v-model="carro"
-              label="Carro"
+              v-model="dtNasc"
+              label="Data de Nascimento"
               required
               @keyup="validate"
             ></v-text-field>
@@ -44,7 +44,7 @@
               :disabled="valid"
               color="success"
               class="mr-4"
-              @click="addArray"
+              @click="addArray(dialogSelecionado)"
             >
               Salvar
             </v-btn>
@@ -69,13 +69,15 @@
                 :inset="item.inset"
               ></v-divider>
 
-              <v-list-item v-else :key="item.title">
+              <v-list-item v-else :key="item.nomeCliente">
                 <v-list-item-avatar>
                   <v-img :src="item.avatar"></v-img>
                 </v-list-item-avatar>
 
                 <v-list-item-content>
-                  <v-list-item-title v-html="item.title"></v-list-item-title>
+                  <v-list-item-title
+                    v-html="item.nomeCliente"
+                  ></v-list-item-title>
                   <v-list-item-subtitle
                     v-html="item.subtitle"
                   ></v-list-item-subtitle>
@@ -99,28 +101,70 @@
       <v-card>
         <v-card-title>
           Fornecedores
-          <v-btn color="#333" icon text @click="addForne">
+          <v-btn color="#333" icon text @click="openForm">
             <v-icon> add </v-icon>
           </v-btn>
         </v-card-title>
         <v-divider></v-divider>
+        <v-container v-if="ableForm">
+          <v-form
+            ref="form"
+            v-model="valid"
+            lazy-validation
+            style="padding: 20px"
+          >
+            <v-text-field
+              v-model="name"
+              label="Nome"
+              required
+              @keyup="validate"
+            ></v-text-field>
 
+            <v-text-field
+              v-model="dtNasc"
+              label="Cod.Fornecedor"
+              required
+              @keyup="validate"
+            ></v-text-field>
+
+            <v-text-field
+              v-model="cnpj"
+              label="CNPJ"
+              required
+              @keyup="validate"
+            ></v-text-field>
+
+            <v-btn
+              :disabled="valid"
+              color="success"
+              class="mr-4"
+              @click="addArray(dialogSelecionado)"
+            >
+              Salvar
+            </v-btn>
+
+            <v-btn color="error" @click="resetValidation"> Cancelar </v-btn>
+          </v-form>
+          <v-divider></v-divider>
+        </v-container>
         <v-card max-width="100%" class="mx-auto">
           <v-list three-line>
-            <template v-for="(item, index) in itemsClient">
+            <template v-for="(item, index) in itemsForne">
               <v-divider
                 v-if="item.divider"
                 :key="index"
                 :inset="item.inset"
               ></v-divider>
 
-              <v-list-item v-else :key="item.title">
+              <v-list-item v-else :key="item.nomeForne">
                 <v-list-item-avatar>
                   <v-img :src="item.avatar"></v-img>
                 </v-list-item-avatar>
 
                 <v-list-item-content>
-                  <v-list-item-title v-html="item.title"></v-list-item-title>
+                  <v-list-item-title
+                    v-html="item.nomeForne"
+                  ></v-list-item-title>
                   <v-list-item-subtitle
                     v-html="item.subtitle"
                   ></v-list-item-subtitle>
@@ -141,28 +185,76 @@
       <v-card>
         <v-card-title>
           Carros
-          <v-btn color="#333" icon @click="addCar">
+          <v-btn color="#333" icon @click="openForm">
             <v-icon> add </v-icon>
           </v-btn>
         </v-card-title>
         <v-divider></v-divider>
+        <v-container v-if="ableForm">
+          <v-form
+            ref="form"
+            v-model="valid"
+            lazy-validation
+            style="padding: 20px"
+          >
+            <v-text-field
+              v-model="carro"
+              label="Nome do carro"
+              required
+              @keyup="validate"
+            ></v-text-field>
+            <v-select
+              v-model="clientsName"
+              :items="clienteSelecionado"
+              label="Selecione o nome do cliente"
+              required
+              @blur="validate"
+            />
+            <v-text-field
+              v-model="placa"
+              label="Placa"
+              required
+              @keyup="validate"
+            ></v-text-field>
 
+            <v-text-field
+              v-model="ano"
+              label="Ano"
+              required
+              @keyup="validate"
+            ></v-text-field>
+
+            <v-btn
+              :disabled="valid"
+              color="success"
+              class="mr-4"
+              @click="addArray(dialogSelecionado)"
+            >
+              Salvar
+            </v-btn>
+
+            <v-btn color="error" @click="resetValidation"> Cancelar </v-btn>
+          </v-form>
+          <v-divider></v-divider>
+        </v-container>
         <v-card max-width="100%" class="mx-auto">
           <v-list three-line>
-            <template v-for="(item, index) in itemsClient">
+            <template v-for="(item, index) in itemsCarros">
               <v-divider
                 v-if="item.divider"
                 :key="index"
                 :inset="item.inset"
               ></v-divider>
 
-              <v-list-item v-else :key="item.title">
+              <v-list-item v-else :key="item.nomeCarro">
                 <v-list-item-avatar>
                   <v-img :src="item.avatar"></v-img>
                 </v-list-item-avatar>
 
                 <v-list-item-content>
-                  <v-list-item-title v-html="item.title"></v-list-item-title>
+                  <v-list-item-title
+                    v-html="item.nomeCarro"
+                  ></v-list-item-title>
                   <v-list-item-subtitle
                     v-html="item.subtitle"
                   ></v-list-item-subtitle>
@@ -183,28 +275,68 @@
       <v-card>
         <v-card-title>
           Peças
-          <v-btn color="#333" icon @click="addParts">
+          <v-btn color="#333" icon @click="openForm">
             <v-icon> add </v-icon>
           </v-btn>
         </v-card-title>
         <v-divider></v-divider>
+        <v-container v-if="ableForm">
+          <v-form
+            ref="form"
+            v-model="valid"
+            lazy-validation
+            style="padding: 20px"
+          >
+            <v-text-field
+              v-model="name"
+              label="Nome"
+              required
+              @keyup="validate"
+            ></v-text-field>
 
+            <v-text-field
+              v-model="carro"
+              label="Carro"
+              required
+              @keyup="validate"
+            ></v-text-field>
+
+            <v-text-field
+              v-model="codPeca"
+              label="Cod. Peca"
+              required
+              @keyup="validate"
+            ></v-text-field>
+
+            <v-btn
+              :disabled="valid"
+              color="success"
+              class="mr-4"
+              @click="addArray(dialogSelecionado)"
+            >
+              Salvar
+            </v-btn>
+
+            <v-btn color="error" @click="resetValidation"> Cancelar </v-btn>
+          </v-form>
+          <v-divider></v-divider>
+        </v-container>
         <v-card max-width="100%" class="mx-auto">
           <v-list three-line>
-            <template v-for="(item, index) in itemsClient">
+            <template v-for="(item, index) in itemsPecas">
               <v-divider
                 v-if="item.divider"
                 :key="index"
                 :inset="item.inset"
               ></v-divider>
 
-              <v-list-item v-else :key="item.title">
+              <v-list-item v-else :key="item.nomePeca">
                 <v-list-item-avatar>
                   <v-img :src="item.avatar"></v-img>
                 </v-list-item-avatar>
 
                 <v-list-item-content>
-                  <v-list-item-title v-html="item.title"></v-list-item-title>
+                  <v-list-item-title v-html="item.nomePeca"></v-list-item-title>
                   <v-list-item-subtitle
                     v-html="item.subtitle"
                   ></v-list-item-subtitle>
@@ -283,92 +415,178 @@ export default {
       itemsClient: [
         {
           avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-          title: "Felipe",
-          subtitle: `Carro: Corsa, CPF: 000000.`,
+          nomeCliente: "Felipe",
+          subtitle: `Dt. Nascimento: 22/04/2000, CPF: 000000.`,
         },
+      ],
+      itemsForne: [
         {
-          avatar: "https://cdn.vuetifyjs.com/images/lists/2.jpg",
-          title: "Matheus",
-          subtitle: `Carro: Sandero, CPF: 000000.`,
+          avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+          nomeForne: "Wagner",
+          subtitle: `Dt. Nascimento: Corsa, CNPJ: 000000.`,
         },
+      ],
+      itemsCarros: [
         {
-          avatar: "https://cdn.vuetifyjs.com/images/lists/3.jpg",
-          title: "Fernando",
-          subtitle:
-            'Carro: Etios, CPF: 000000.',
+          avatar:
+            "https://fotos.jornaldocarro.estadao.com.br/wp-content/uploads/2020/07/27131755/Chevrolet-Celta-2014-1160x770.jpg",
+          nomeCarro: "Celta Turbo",
+          subtitle: `Ano: 2016, Placa: 000000.`,
+        },
+      ],
+      itemsPecas: [
+        {
+          avatar:
+            "https://www.razaoautomovel.com/wp-content/uploads/2019/07/Toyota-Supra_925x520_acf_cropped.jpg",
+          nomePeca: "Cabecote de 2JZ",
+          subtitle: `Carro: Toyota Supra, Cod: 000000.`,
         },
       ],
       valid: false,
+
+      //form cliente
       name: "",
       cpf: "",
+      dtNasc: "",
+      //form Fornecedor
+      cnpj: "",
+      //form Carro
       carro: "",
+      placa: "",
+      ano: "",
+      clientsName: "",
+      clienteSelecionado: [],
+      //form Peca
+      codPeca: "",
+      // fim forms
+
       ableForm: false,
+      dialogSelecionado: undefined,
     };
   },
   methods: {
     sideBarButtons(item) {
       switch (item) {
         case 0:
-          console.log("cliente");
           this.dialogClient = true;
+          this.ableForm = false;
+          this.dialogSelecionado = item;
           break;
         case 1:
-          console.log("Fornecedore");
           this.dialogForne = true;
+          this.ableForm = false;
+          this.dialogSelecionado = item;
           break;
         case 2:
-          console.log("Carros");
           this.dialogCar = true;
+          this.ableForm = false;
+          this.selectClient();
+          this.dialogSelecionado = item;
           break;
         case 3:
-          console.log("Peças");
           this.dialogParts = true;
+          this.ableForm = false;
+          this.dialogSelecionado = item;
           break;
       }
     },
-    addClient() {
-      this.ableForm = true;
-    },
-    addForne(e) {
-      console.log(e);
-    },
-    addCar(e) {
-      console.log(e);
-    },
-    addParts(e) {
-      console.log(e);
+    openForm() {
+      if (this.ableForm) {
+        this.ableForm = false;
+      } else {
+        this.ableForm = true;
+      }
     },
     deleteClient(index) {
-      swal.fire({
-        title: "Tem certeza que dejesa excluir?",
-        icon: "warning",
-        confirmButtonText: "Sim",
-        showCancelButton: true,
-        cancelButtonText: "Não",
-      }).then((resultado) => {
-        if (resultado.isConfirmed) {
-          this.itemsClient.splice(index, 1);
-        }
-      });
+      swal
+        .fire({
+          title: "Tem certeza que dejesa excluir?",
+          icon: "warning",
+          confirmButtonText: "Sim",
+          showCancelButton: true,
+          cancelButtonText: "Não",
+        })
+        .then((resultado) => {
+          if (resultado.isConfirmed) {
+            this.itemsClient.splice(index, 1);
+          }
+        });
     },
     validate() {
-      if (this.name !== "" && this.cpf !== "" && this.carro !== "") {
+      if (this.name !== "" && this.cpf !== "" && this.dtNasc !== "") {
+        // cliente
+        this.valid = false;
+      } else if (this.name !== "" && this.cnpj !== "" && this.dtNasc !== "") {
+        // fornecedor
+        this.valid = false;
+      } else if (
+        this.carro !== "" &&
+        this.ano !== "" &&
+        this.placa !== "" &&
+        this.clientsName !== ""
+      ) {
+        // Carro
+        this.valid = false;
+      } else if (this.name !== "" && this.carro !== "" && this.codPeca !== "") {
+        // peca
         this.valid = false;
       } else {
         this.valid = true;
       }
     },
     resetValidation() {
-      (this.name = ""), (this.cpf = ""), (this.carro = ""), (this.valid = true);
+      this.name = "";
+      this.cpf = "";
+      this.carro = "";
+      this.ano = "";
+      this.dtNasc = "";
+      this.placa = "";
+      this.clientsName = "";
+      this.codPeca = "";
+      this.cnpj = "";
+      this.valid = true;
       this.ableForm = false;
     },
-    addArray() {
-      this.itemsClient.push({
-        avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-        title: this.name,
-        subtitle: `Carro: ${this.carro}, CPF: ${this.cpf}`,
+    addArray(dialogSelecionado) {
+      switch (dialogSelecionado) {
+        case 0:
+          this.itemsClient.push({
+            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+            nomeCliente: this.name,
+            subtitle: `Dt. Nascimento: ${this.dtNasc}, CPF: ${this.cpf}`,
+          });
+          this.resetValidation();
+          break;
+        case 1:
+          this.itemsForne.push({
+            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+            nomeForne: this.name,
+            subtitle: `Dt. Nascimento: ${this.dtNasc}, CPF: ${this.cnpj}`,
+          });
+          this.resetValidation();
+          break;
+        case 2:
+          this.itemsCarros.push({
+            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+            nomeCarro: `${this.carro} / ${this.clientsName}`,
+            subtitle: `Ano: ${this.ano}, Placa: ${this.placa}`,
+          });
+          this.resetValidation();
+          break;
+        case 3:
+          this.itemsPecas.push({
+            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+            nomePeca: this.name,
+            subtitle: `Carro: ${this.carro}, Cod: ${this.codPeca}`,
+          });
+          this.resetValidation();
+          break;
+      }
+    },
+    selectClient() {
+      this.itemsClient.forEach((elements) => {
+        this.clienteSelecionado.push(elements.nomeCliente);
       });
-      this.resetValidation();
     },
   },
 };
@@ -378,6 +596,6 @@ export default {
   padding: 0 !important;
 }
 .swal2-popup {
-    font-family: 'Roboto';
+  font-family: "Roboto";
 }
 </style>
