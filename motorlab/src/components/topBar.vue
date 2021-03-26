@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar color="#3a6a9a" fixed dense dark>
+    <v-app-bar color="#35f073" fixed dense dark>
       <v-toolbar-title>{{ pageName }}</v-toolbar-title>
 
       <v-spacer></v-spacer>
