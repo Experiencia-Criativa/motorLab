@@ -1,14 +1,12 @@
 <template>
   <div>
-    <v-dialog 
-    v-model="verEventoDialog"
-    width="600"
-    :persistent="loading"
-    @click:outside="!loading ? salvaEdicaoEvento() : 1"
+    <v-dialog
+      v-model="verEventoDialog"
+      width="600"
+      :persistent="loading"
+      @click:outside="!loading ? salvaEdicaoEvento() : 1"
     >
-      <v-card
-      :loading='loading'
-      >
+      <v-card :loading="loading">
         <v-card-title>
           {{ nomeEventoTxt }}
         </v-card-title>
@@ -17,9 +15,7 @@
         </v-card-subtitle>
         <v-divider></v-divider>
         <v-container>
-          <v-row
-           style="padding: 0 25px; margin-top: 5px;"
-           >
+          <v-row style="padding: 0 25px; margin-top: 5px">
             <v-text-field
               :color="iconeColor"
               v-model="nomeEventoTxt"
@@ -29,24 +25,52 @@
             >
             </v-text-field>
           </v-row>
-          <v-row
-            style="padding: 0 15px"
-          >
+          <v-row style="padding: 0 15px">
             <v-col>
               <v-text-field
+                :color="iconeColor"
                 v-model="dataEventoEntTxt"
                 label="Hora inicio evento"
                 v-mask="['####-##-## ##:##']"
+                :append-icon="iconeTp"
+                @keyup="editaEvento"
               >
               </v-text-field>
             </v-col>
             <v-col>
               <v-text-field
+                :color="iconeColor"
                 v-model="dataEventoSaidaTxt"
                 label="Hora final evento"
                 v-mask="['####-##-## ##:##']"
+                :append-icon="iconeTp"
+                @keyup="editaEvento"
               >
               </v-text-field>
+            </v-col>
+          </v-row>
+          <v-row style="padding: 0 15px">
+            <v-col>
+              <v-select
+                v-model="cliente"
+                label="Cliente"
+                :color="iconeColor"
+                :append-icon="iconeTp"
+                :items="cliente"
+                @keyup="editaEvento"
+              >
+              </v-select>
+            </v-col>
+            <v-col>
+              <v-select
+                v-model="carro"
+                label="Carro"
+                :color="iconeColor"
+                :append-icon="iconeTp"
+                :items="carro"
+                @keyup="editaEvento"
+              >
+              </v-select>
             </v-col>
           </v-row>
         </v-container>
@@ -87,12 +111,12 @@
 
 <script>
 import moment from "moment";
-import {mask} from 'vue-the-mask'
+import { mask } from "vue-the-mask";
 export default {
-  directives: {mask},
+  directives: { mask },
   data: () => ({
     focus: "",
-    type: "day",
+    type: "month",
     types: ["month", "week", "day"],
     mode: "stack",
     modes: ["stack", "column"],
@@ -106,12 +130,19 @@ export default {
     events: [],
     eventoSelecionado: [],
     verEventoDialog: false,
-    nomeEventoTxt: '',
-    dataEventoEntTxt: '',
-    dataEventoSaidaTxt: '',
-    iconeTp: '',
-    iconeColor: '#7d7d7d',
+    nomeEventoTxt: "",
+    dataEventoEntTxt: "",
+    dataEventoSaidaTxt: "",
+    iconeTp: "",
+    iconeColor: "#7d7d7d",
     loading: false,
+    itemsClient: [
+      { cliente: "Raggi", carro: "Sandero" },
+      { cliente: "Fernando", carro: "Sentra" },
+      { cliente: "Felipe", carro: "306" },
+    ],
+    carro: [],
+    cliente: [],
   }),
   beforeMount() {
     this.getEvents();
@@ -121,7 +152,7 @@ export default {
       this.events.push({
         name: "Raggi",
         start: moment().format("YYYY-MM-DD HH:MM"),
-        end:   moment().format("YYYY-MM-DD HH:MM"),
+        end: moment().format("YYYY-MM-DD HH:MM"),
         color: "rgb(218 12 12)",
         timed: 1,
       });
@@ -137,35 +168,45 @@ export default {
       this.focus = "";
     },
     verEvento(e) {
-      this.iconeColor = '#7d7d7d'
-      this.iconeTp = ''
-      this.eventoSelecionado = e.event
-      this.nomeEventoTxt = e.event.name
-      this.dataEventoEntTxt = e.event.start
-      this.dataEventoSaidaTxt = e.event.end
-      this.verEventoDialog = true
+      this.iconeColor = "#7d7d7d";
+      this.iconeTp = "";
+      this.eventoSelecionado = e.event;
+      this.nomeEventoTxt = e.event.name;
+      this.dataEventoEntTxt = e.event.start;
+      this.dataEventoSaidaTxt = e.event.end;
+      this.verEventoDialog = true;
+      this.itemsClient.forEach((element) => {
+        this.cliente.push(element.cliente);
+        this.carro.push(element.carro);
+      });
     },
-    editaEvento() {
-      this.iconeColor = '#7d7d7d'
-      this.iconeTp = ''
-      this.loading = true
+    editaEvento(e) {
+      this.iconeColor = "#7d7d7d";
+      this.iconeTp = "";
+      this.loading = true;
       setTimeout(() => {
-        this.loading = false
-        this.iconeColor = '#35f073'
-        this.iconeTp = 'check_circle'
-      }, 3000)
+        this.loading = false;
+        this.iconeColor = "#35f073";
+        this.iconeTp = "check_circle";
+      }, 3000);
+      if (e.code === "Enter") {
+        this.verEventoDialog = false;
+        this.salvaEdicaoEvento();
+      }
     },
     salvaEdicaoEvento() {
-      let index = this.events.findIndex(f => f.name === this.eventoSelecionado.name)
+      let index = this.events.findIndex(
+        (f) => f.name === this.eventoSelecionado.name
+      );
       let eventos = {
         name: this.nomeEventoTxt,
-        start: moment().format("YYYY-MM-DD HH:MM"),
-        end:   moment().format("YYYY-MM-DD HH:MM"),
+        start: this.dataEventoEntTxt,
+        end: this.dataEventoSaidaTxt,
         color: "rgb(218 12 12)",
         timed: 1,
-      }
-      this.events.splice(index, 1, eventos)
-    }
+      };
+      this.events.splice(index, 1, eventos);
+    },
   },
 };
 </script>
