@@ -52,18 +52,19 @@
           <v-row style="padding: 0 15px">
             <v-col>
               <v-select
-                v-model="cliente"
+                v-model="formCliente"
                 label="Cliente"
                 :color="iconeColor"
                 :append-icon="iconeTp"
                 :items="cliente"
+                @change="veiculoCliente(formCliente)"
                 @keyup="editaEvento"
               >
               </v-select>
             </v-col>
             <v-col>
               <v-select
-                v-model="carro"
+                v-model="formCarro"
                 label="Carro"
                 :color="iconeColor"
                 :append-icon="iconeTp"
@@ -137,10 +138,12 @@ export default {
     iconeColor: "#7d7d7d",
     loading: false,
     itemsClient: [
-      { cliente: "Raggi", carro: "Sandero" },
-      { cliente: "Fernando", carro: "Sentra" },
-      { cliente: "Felipe", carro: "306" },
+      { cliente: "Raggi", carro: ["Sandero"] },
+      { cliente: "Fernando", carro: ["Sentra", "Celta"] },
+      { cliente: "Felipe", carro: ["306"] },
     ],
+    formCliente: '',
+    formCarro: '',
     carro: [],
     cliente: [],
   }),
@@ -177,7 +180,6 @@ export default {
       this.verEventoDialog = true;
       this.itemsClient.forEach((element) => {
         this.cliente.push(element.cliente);
-        this.carro.push(element.carro);
       });
     },
     editaEvento(e) {
@@ -207,6 +209,14 @@ export default {
       };
       this.events.splice(index, 1, eventos);
     },
+    veiculoCliente(nomeCliente) {
+      let clienteSelecionado = this.itemsClient.findIndex(f => f.cliente === nomeCliente)
+      this.formCarro = this.itemsClient[clienteSelecionado].carro[0]
+      this.carro = []
+      this.itemsClient[clienteSelecionado].carro.forEach((element) => {
+        this.carro.push(element);
+      });
+    }
   },
 };
 </script>

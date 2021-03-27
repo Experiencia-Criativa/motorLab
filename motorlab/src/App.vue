@@ -15,7 +15,7 @@ export default {
   components: { topBar, bottomBar, sideBar },
   computed: {
     theme() {
-      return this.$vuetify.theme.dark ? "dark" : "light";
+      return this.$vuetify.themes.dark ? "dark" : "light";
     },
   },
 };
