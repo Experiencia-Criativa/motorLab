@@ -9,6 +9,32 @@
       <v-card :loading="loading">
         <v-card-title>
           {{ nomeEventoTxt }}
+          <v-menu
+            v-model="menu"
+            :close-on-content-click="false"
+            :nudge-width="200"
+            offset-x
+          >
+            <template v-slot:activator="{ on, attrs }">
+            <v-icon
+            :color="colorPicker.hex == undefined ? noColor : colorPicker.hex"
+            size="28"
+            v-bind="attrs"
+            v-on="on"
+            >
+              fiber_manual_record
+            </v-icon>
+            </template>
+            <v-card>
+              <v-color-picker
+                v-model="colorPicker"
+                dot-size="25"
+                hide-inputs
+                hide-mode-switch
+                swatches-max-height="164"
+              ></v-color-picker>
+            </v-card>
+          </v-menu>
         </v-card-title>
         <v-card-subtitle>
           {{ dataEventoEntTxt }}
@@ -146,6 +172,9 @@ export default {
     formCarro: '',
     carro: [],
     cliente: [],
+    colorPicker: {},
+    menu: false,
+    noColor: '#FF0000',
   }),
   beforeMount() {
     this.getEvents();
@@ -156,8 +185,10 @@ export default {
         name: "Raggi",
         start: moment().format("YYYY-MM-DD HH:MM"),
         end: moment().format("YYYY-MM-DD HH:MM"),
-        color: "rgb(218 12 12)",
+        color: "#ff2976",
         timed: 1,
+        cliente: 'Raggi',
+        carro: 'Sandero',
       });
     },
     rnd(a, b) {
@@ -173,14 +204,17 @@ export default {
     verEvento(e) {
       this.iconeColor = "#7d7d7d";
       this.iconeTp = "";
+      this.colorPicker.hex = e.event.color
       this.eventoSelecionado = e.event;
       this.nomeEventoTxt = e.event.name;
       this.dataEventoEntTxt = e.event.start;
       this.dataEventoSaidaTxt = e.event.end;
       this.verEventoDialog = true;
       this.itemsClient.forEach((element) => {
-        this.cliente.push(element.cliente);
+      this.cliente.push(element.cliente);
       });
+      this.formCliente = e.event.cliente
+      this.veiculoCliente(this.formCliente)
     },
     editaEvento(e) {
       this.iconeColor = "#7d7d7d";
@@ -204,8 +238,10 @@ export default {
         name: this.nomeEventoTxt,
         start: this.dataEventoEntTxt,
         end: this.dataEventoSaidaTxt,
-        color: "rgb(218 12 12)",
+        color: this.colorPicker.hex,
         timed: 1,
+        cliente: this.formCliente,
+        carro: this.carro,
       };
       this.events.splice(index, 1, eventos);
     },
@@ -216,7 +252,7 @@ export default {
       this.itemsClient[clienteSelecionado].carro.forEach((element) => {
         this.carro.push(element);
       });
-    }
+    },
   },
 };
 </script>
@@ -224,5 +260,19 @@ export default {
 <style>
 .row + .row {
   margin-top: 0 !important ;
+}
+.theme--dark.v-calendar-weekly .v-calendar-weekly__day {
+  border-right: #404040 1px solid !important;
+  border-bottom: #404040 1px solid !important;
+  color: #FFFFFF;
+}
+.theme--dark.v-calendar-weekly .v-calendar-weekly__head-weekday {
+    border-right: #404040 1px solid !important;
+    color: #FFFFFF !important;
+}
+.theme--dark.v-calendar-weekly {
+  background-color: #303030 !important;
+  border-top: #404040 1px solid !important;
+  border-left: #9e9e9e 1px solid !important;
 }
 </style>
