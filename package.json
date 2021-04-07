@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "icons": "^1.0.0",
+    "localbase": "^0.7.4",
     "material": "^0.4.3",
     "material-icons": "^0.5.4",
     "moment": "^2.29.1",

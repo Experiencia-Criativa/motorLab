@@ -5,7 +5,7 @@
       <v-card>
         <v-card-title>
           Clientes
-          <v-btn color="#333" icon text @click="openForm">
+          <v-btn color="#ededed" icon text @click="openForm">
             <v-icon> add </v-icon>
           </v-btn>
         </v-card-title>
@@ -82,7 +82,7 @@
                     v-html="item.subtitle"
                   ></v-list-item-subtitle>
                 </v-list-item-content>
-                <v-btn color="#333" icon text @click="deleteClient(index)">
+                <v-btn color="#ededed" icon text @click="deleteClient(index)">
                   <v-icon> delete </v-icon>
                 </v-btn>
               </v-list-item>
@@ -101,7 +101,7 @@
       <v-card>
         <v-card-title>
           Fornecedores
-          <v-btn color="#333" icon text @click="openForm">
+          <v-btn color="#ededed" icon text @click="openForm">
             <v-icon> add </v-icon>
           </v-btn>
         </v-card-title>
@@ -185,7 +185,7 @@
       <v-card>
         <v-card-title>
           Carros
-          <v-btn color="#333" icon @click="openForm">
+          <v-btn color="#ededed" icon @click="openForm">
             <v-icon> add </v-icon>
           </v-btn>
         </v-card-title>
@@ -275,7 +275,7 @@
       <v-card>
         <v-card-title>
           Peças
-          <v-btn color="#333" icon @click="openForm">
+          <v-btn color="#ededed" icon @click="openForm">
             <v-icon> add </v-icon>
           </v-btn>
         </v-card-title>

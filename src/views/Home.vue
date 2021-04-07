@@ -202,6 +202,7 @@ export default {
       this.focus = "";
     },
     verEvento(e) {
+      console.log(e)
       this.iconeColor = "#7d7d7d";
       this.iconeTp = "";
       this.colorPicker.hex = e.event.color
@@ -213,6 +214,7 @@ export default {
       this.itemsClient.forEach((element) => {
       this.cliente.push(element.cliente);
       });
+      this.formCarro = e.event.carro
       this.formCliente = e.event.cliente
       this.veiculoCliente(this.formCliente)
     },
@@ -241,17 +243,18 @@ export default {
         color: this.colorPicker.hex,
         timed: 1,
         cliente: this.formCliente,
-        carro: this.carro,
+        carro: this.formCarro,
       };
       this.events.splice(index, 1, eventos);
     },
     veiculoCliente(nomeCliente) {
       let clienteSelecionado = this.itemsClient.findIndex(f => f.cliente === nomeCliente)
-      this.formCarro = this.itemsClient[clienteSelecionado].carro[0]
+      // this.formCarro = this.itemsClient[clienteSelecionado].carro[0]
       this.carro = []
       this.itemsClient[clienteSelecionado].carro.forEach((element) => {
         this.carro.push(element);
       });
+      console.log(this.formCarro)
     },
   },
 };
