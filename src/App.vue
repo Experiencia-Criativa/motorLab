@@ -11,7 +11,6 @@
 import sideBar from "./components/sideBar";
 import topBar from "./components/topBar";
 import bottomBar from "./components/bottomBar";
-import Localbase from 'localbase'
 export default {
   components: { topBar, bottomBar, sideBar },
   computed: {
@@ -19,17 +18,6 @@ export default {
       return this.$vuetify.themes.dark ? "dark" : "light";
     },
   },
-  mounted() {
-    let db = new Localbase('db')
-
-    db.collection('clientes').add({
-      id: 1,
-      nome: 'Raggi Izar Neto',
-      dtNascimento: 20001015,
-      cpf: "323.323.323-44",
-      carro: ['Sandero', 'Celta'] 
-    })
-  }
 };
 </script>
 <style lang="scss">

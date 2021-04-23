@@ -29,6 +29,7 @@
             <v-text-field
               v-model="dtNasc"
               label="Data de Nascimento"
+              v-mask="'##/##/####'"
               required
               @keyup="validate"
             ></v-text-field>
@@ -36,6 +37,7 @@
             <v-text-field
               v-model="cpf"
               label="CPF"
+              v-mask="['###.###.###-##']"
               required
               @keyup="validate"
             ></v-text-field>
@@ -395,7 +397,10 @@
 </template>
 <script>
 import swal from "sweetalert2";
+import indexDb from "../indexedDB/indexdb";
+import { mask } from "vue-the-mask";
 export default {
+  directives: { mask },
   component: { swal },
   data() {
     return {
@@ -412,13 +417,7 @@ export default {
       dialogCar: false,
       dialogParts: false,
 
-      itemsClient: [
-        {
-          avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-          nomeCliente: "Felipe",
-          subtitle: `Dt. Nascimento: 22/04/2000, CPF: 000000.`,
-        },
-      ],
+      itemsClient: [],
       itemsForne: [
         {
           avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
@@ -462,9 +461,26 @@ export default {
 
       ableForm: false,
       dialogSelecionado: undefined,
+      //obj IndexDB itensClient
+      itemsClientDB: {},
     };
   },
+  mounted() {
+    this.getDBs()
+  },
   methods: {
+    getDBs(){
+      indexDb.getDataBase("clientes").then((clientes) => {
+        this.itemsClientDB = clientes;
+        this.itemsClientDB.forEach(f => {
+        this.itemsClient.push({
+          avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+          nomeCliente: f.nome,
+          subtitle: `Dt. Nascimento: ${f.dtNascimento}, CPF: ${f.cpf}`,
+        })
+      })
+    });
+  },
     sideBarButtons(item) {
       switch (item) {
         case 0:
@@ -508,6 +524,7 @@ export default {
         })
         .then((resultado) => {
           if (resultado.isConfirmed) {
+            indexDb.deleteDataBase("clientes", this.itemsClientDB[index].id)
             this.itemsClient.splice(index, 1);
           }
         });
@@ -550,11 +567,20 @@ export default {
     addArray(dialogSelecionado) {
       switch (dialogSelecionado) {
         case 0:
+          let DBobj = {
+            id: this.itemsClientDB[this.itemsClientDB.length - 1].id + 1,
+            nome: this.name,
+            dtNascimento: this.dtNasc,
+            cpf: this.cpf,
+            carros: []
+          }
           this.itemsClient.push({
             avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
             nomeCliente: this.name,
             subtitle: `Dt. Nascimento: ${this.dtNasc}, CPF: ${this.cpf}`,
           });
+          indexDb.newDataBase('clientes', DBobj)
+          this.itemsClientDB.push(DBobj)
           this.resetValidation();
           break;
         case 1:

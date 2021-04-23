@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <div>
     <v-dialog
@@ -8,7 +9,7 @@
     >
       <v-card :loading="loading">
         <v-card-title>
-          {{ nomeEventoTxt }}
+          {{ nomeEventoTxt === '' ? 'Novo Evento' : nomeEventoTxt }}
           <v-menu
             v-model="menu"
             :close-on-content-click="false"
@@ -16,14 +17,14 @@
             offset-x
           >
             <template v-slot:activator="{ on, attrs }">
-            <v-icon
-            :color="colorPicker.hex == undefined ? noColor : colorPicker.hex"
-            size="28"
-            v-bind="attrs"
-            v-on="on"
-            >
-              fiber_manual_record
-            </v-icon>
+              <v-icon
+                :color="colorPicker.hex == undefined ? noColor : colorPicker.hex"
+                size="25"
+                v-bind="attrs"
+                v-on="on"
+              >
+                fiber_manual_record
+              </v-icon>
             </template>
             <v-card>
               <v-color-picker
@@ -35,9 +36,19 @@
               ></v-color-picker>
             </v-card>
           </v-menu>
+          <v-btn
+            icon
+            text
+            class="iconRight"
+            @click="deletarEvento(eventoSelecionado)"
+          >
+            <v-icon size="26">
+              delete
+            </v-icon>
+          </v-btn>
         </v-card-title>
         <v-card-subtitle>
-          {{ dataEventoEntTxt }}
+          {{ dataEventoEntTxt === '' ? 'Insira a data do evento' : dataEventoEntTxt }}
         </v-card-subtitle>
         <v-divider></v-divider>
         <v-container>
@@ -107,8 +118,16 @@
       <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
-      <v-btn outlined class="ma-2" color="grey darken-2" @click="setToday">
+      <v-btn outlined class="ma-2" color="white" @click="setToday">
         Hoje
+      </v-btn>
+      <v-btn
+       outlined 
+       class="ma-2" 
+       color="white" 
+       @click="type === 'month' ? (type = 'day') : (type = 'month')"
+       >
+        {{ type !== 'month' ? 'Dia' : 'Mes' }}
       </v-btn>
       <v-spacer></v-spacer>
       <v-toolbar-title style="margin-top: 12px" v-if="$refs.calendar">
@@ -129,7 +148,7 @@
         :events="events"
         :event-overlap-mode="mode"
         :event-overlap-threshold="60"
-        @click:date="type === 'month' ? viewDay($event) : (type = 'month')"
+        @click:date="type === 'day' ? agendarEvento($event) : viewDay($event)"
         @click:event="verEvento"
       ></v-calendar>
     </v-sheet>
@@ -139,6 +158,7 @@
 <script>
 import moment from "moment";
 import { mask } from "vue-the-mask";
+import indexDb from "../indexedDB/indexdb";
 export default {
   directives: { mask },
   data: () => ({
@@ -163,21 +183,20 @@ export default {
     iconeTp: "",
     iconeColor: "#7d7d7d",
     loading: false,
-    itemsClient: [
-      { cliente: "Raggi", carro: ["Sandero"] },
-      { cliente: "Fernando", carro: ["Sentra", "Celta"] },
-      { cliente: "Felipe", carro: ["306"] },
-    ],
-    formCliente: '',
-    formCarro: '',
+    itemsClient: {},
+    formCliente: "",
+    formCarro: "",
     carro: [],
     cliente: [],
     colorPicker: {},
     menu: false,
-    noColor: '#FF0000',
+    noColor: "#FF0000",
   }),
   beforeMount() {
     this.getEvents();
+    indexDb.getDataBase("clientes").then((clientes) => {
+      this.itemsClient = clientes;
+    });
   },
   methods: {
     getEvents() {
@@ -187,12 +206,10 @@ export default {
         end: moment().format("YYYY-MM-DD HH:MM"),
         color: "#ff2976",
         timed: 1,
-        cliente: 'Raggi',
-        carro: 'Sandero',
+        cliente: "Raggi Izar Neto",
+        carro: "Celta",
+        id: Math.floor(Math.random() * 10000000000),
       });
-    },
-    rnd(a, b) {
-      return Math.floor((b - a + 1) * Math.random()) + a;
     },
     viewDay({ date }) {
       this.focus = date;
@@ -205,18 +222,18 @@ export default {
       console.log(e)
       this.iconeColor = "#7d7d7d";
       this.iconeTp = "";
-      this.colorPicker.hex = e.event.color
+      this.colorPicker.hex = e.event.color;
       this.eventoSelecionado = e.event;
       this.nomeEventoTxt = e.event.name;
       this.dataEventoEntTxt = e.event.start;
       this.dataEventoSaidaTxt = e.event.end;
       this.verEventoDialog = true;
       this.itemsClient.forEach((element) => {
-      this.cliente.push(element.cliente);
+        this.cliente.push(element.nome);
       });
-      this.formCarro = e.event.carro
-      this.formCliente = e.event.cliente
-      this.veiculoCliente(this.formCliente)
+      this.formCarro = e.event.carro;
+      this.formCliente = e.event.cliente;
+      this.veiculoCliente(this.formCliente);
     },
     editaEvento(e) {
       this.iconeColor = "#7d7d7d";
@@ -234,7 +251,7 @@ export default {
     },
     salvaEdicaoEvento() {
       let index = this.events.findIndex(
-        (f) => f.name === this.eventoSelecionado.name
+        (f) => f.id === this.eventoSelecionado.id
       );
       let eventos = {
         name: this.nomeEventoTxt,
@@ -244,18 +261,49 @@ export default {
         timed: 1,
         cliente: this.formCliente,
         carro: this.formCarro,
+        id: Math.floor(Math.random() * 10000000000),
       };
-      this.events.splice(index, 1, eventos);
+      console.log(eventos)
+      if (eventos.name !== "" && eventos.start !== "" && eventos.end !== "") {
+        if (index === -1) {
+        this.events.push(eventos)
+        } else {
+          this.events.splice(index, 1, eventos);  
+        }   
+      }   
     },
     veiculoCliente(nomeCliente) {
-      let clienteSelecionado = this.itemsClient.findIndex(f => f.cliente === nomeCliente)
+      let clienteSelecionado = this.itemsClient.findIndex(f => f.nome === nomeCliente);
       // this.formCarro = this.itemsClient[clienteSelecionado].carro[0]
-      this.carro = []
+      this.carro = [];
       this.itemsClient[clienteSelecionado].carro.forEach((element) => {
         this.carro.push(element);
       });
-      console.log(this.formCarro)
     },
+    // marcar Evento
+    agendarEvento(e) {
+      console.log(e)
+      this.iconeColor = "#7d7d7d";
+      this.iconeTp = "";
+      this.colorPicker.hex = "#ff0000";
+      this.eventoSelecionado = "";
+      this.nomeEventoTxt = "";
+      this.dataEventoEntTxt = e.date;
+      this.dataEventoSaidaTxt = e.date;
+      this.itemsClient.forEach((element) => {
+        this.cliente.push(element.nome);
+      });
+      this.formCarro = "";
+      this.formCliente = "";
+
+      this.verEventoDialog = true
+      
+    },
+    deletarEvento(e) {
+      let Index = this.events.findIndex(f => f.name === e.name)
+      this.events.splice(Index, 1)
+      this.verEventoDialog = false
+    }
   },
 };
 </script>
@@ -267,15 +315,39 @@ export default {
 .theme--dark.v-calendar-weekly .v-calendar-weekly__day {
   border-right: #404040 1px solid !important;
   border-bottom: #404040 1px solid !important;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 .theme--dark.v-calendar-weekly .v-calendar-weekly__head-weekday {
-    border-right: #404040 1px solid !important;
-    color: #FFFFFF !important;
+  border-right: #404040 1px solid !important;
+  color: #ffffff !important;
 }
 .theme--dark.v-calendar-weekly {
   background-color: #303030 !important;
   border-top: #404040 1px solid !important;
   border-left: #9e9e9e 1px solid !important;
 }
+.theme--dark.v-calendar-daily .v-calendar-daily__day-interval {
+    border-top: #4a4a4a 1px solid !important;
+}
+.theme--dark.v-calendar-daily .v-calendar-daily_head-day {
+    border-right: #4a4a4a 1px solid !important;
+    border-bottom: #4a4a4a 1px solid !important;
+    color: #FFFFFF;
+}
+.theme--dark.v-calendar-daily {
+    background-color: #303030;
+    border-left: #4a4a4a 1px solid !important;
+    border-top: #4a4a4a 1px solid !important;
+}
+.theme--dark.v-calendar-daily .v-calendar-daily__day {
+    border-right: none !important; 
+    border-bottom: none !important; 
+}
+
+.iconRight{
+  position: absolute;
+  right: 20px;
+  top: 24px;
+}
 </style>
+/* eslint-disable */
