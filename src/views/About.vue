@@ -1,6 +1,5 @@
 <template>
 <div>
-
 <!--===============Dialog Cliente==================-->
     <v-dialog v-model="dialogClient" width="600">
       <v-card>
@@ -354,7 +353,6 @@
       </v-card>
     </v-dialog>
     <!--===============FIM Dialog Peças==============================-->
-
   <v-container>
     <v-row>
       <v-col cols="12">
@@ -634,18 +632,18 @@ const gradients = [
           this.resetValidation();
           break;
         case 1:
-          this.itemsForne.push({
-            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-            nomeForne: this.name,
-            subtitle: `Dt. Nascimento: ${this.dtNasc}, CPF: ${this.cnpj}`,
-          });
-          this.resetValidation();
-          break;
-        case 2:
           this.itemsCarros.push({
             avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
             nomeCarro: `${this.carro} / ${this.clientsName}`,
             subtitle: `Ano: ${this.ano}, Placa: ${this.placa}`,
+          });
+          this.resetValidation();
+          break;
+        case 2:
+          this.itemsForne.push({
+            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+            nomeForne: this.name,
+            subtitle: `Dt. Nascimento: ${this.dtNasc}, CPF: ${this.cnpj}`,
           });
           this.resetValidation();
           break;
