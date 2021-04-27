@@ -114,7 +114,7 @@
         </v-container>
       </v-card>
     </v-dialog>
-    <v-sheet tile height="54" class="d-flex">
+    <v-sheet title height="54" class="d-flex">
       <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
@@ -137,7 +137,7 @@
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
     </v-sheet>
-    <v-sheet height="750">
+    <v-sheet height="775">
       <v-calendar
         ref="calendar"
         v-model="focus"
@@ -191,14 +191,19 @@ export default {
     colorPicker: {},
     menu: false,
     noColor: "#FF0000",
+    keyDialog: 0,
   }),
   beforeMount() {
     this.getEvents();
-    indexDb.getDataBase("clientes").then((clientes) => {
-      this.itemsClient = clientes;
-    });
+    this.getDB();
   },
   methods: {
+    getDB() {
+      indexDb.getDataBase("clientes").then((clientes) => {
+        this.itemsClient = clientes;
+        return this.itemsClient
+      });
+    },
     getEvents() {
       this.events.push({
         name: "Raggi",
@@ -219,7 +224,6 @@ export default {
       this.focus = "";
     },
     verEvento(e) {
-      console.log(e)
       this.iconeColor = "#7d7d7d";
       this.iconeTp = "";
       this.colorPicker.hex = e.event.color;
@@ -263,7 +267,6 @@ export default {
         carro: this.formCarro,
         id: Math.floor(Math.random() * 10000000000),
       };
-      console.log(eventos)
       if (eventos.name !== "" && eventos.start !== "" && eventos.end !== "") {
         if (index === -1) {
         this.events.push(eventos)
@@ -276,13 +279,14 @@ export default {
       let clienteSelecionado = this.itemsClient.findIndex(f => f.nome === nomeCliente);
       // this.formCarro = this.itemsClient[clienteSelecionado].carro[0]
       this.carro = [];
-      this.itemsClient[clienteSelecionado].carro.forEach((element) => {
-        this.carro.push(element);
-      });
+      if (this.itemsClient[clienteSelecionado] !== undefined) {
+        this.itemsClient[clienteSelecionado].carro.forEach((element) => {
+          this.carro.push(element);
+        });
+      }
     },
     // marcar Evento
     agendarEvento(e) {
-      console.log(e)
       this.iconeColor = "#7d7d7d";
       this.iconeTp = "";
       this.colorPicker.hex = "#ff0000";
@@ -324,7 +328,7 @@ export default {
 .theme--dark.v-calendar-weekly {
   background-color: #303030 !important;
   border-top: #404040 1px solid !important;
-  border-left: #9e9e9e 1px solid !important;
+  border-left: #404040 1px solid !important;
 }
 .theme--dark.v-calendar-daily .v-calendar-daily__day-interval {
     border-top: #4a4a4a 1px solid !important;
@@ -343,7 +347,9 @@ export default {
     border-right: none !important; 
     border-bottom: none !important; 
 }
-
+.theme--dark.v-calendar-events .v-event-timed {
+    border: 0px solid !important;
+}
 .iconRight{
   position: absolute;
   right: 20px;

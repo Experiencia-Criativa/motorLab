@@ -1,18 +1,16 @@
 <template>
   <v-app>
     <top-Bar style="z-index: 2" />
-    <side-Bar class="sideBar" />
     <router-view class="router" />
     <bottom-bar class="bottomBar" />
   </v-app>
 </template>
 
 <script>
-import sideBar from "./components/sideBar";
 import topBar from "./components/topBar";
 import bottomBar from "./components/bottomBar";
 export default {
-  components: { topBar, bottomBar, sideBar },
+  components: { topBar, bottomBar },
   computed: {
     theme() {
       return this.$vuetify.themes.dark ? "dark" : "light";
@@ -28,14 +26,13 @@ export default {
   height: 100%;
 }
 .router {
-  padding: 55px 0px 10px 55px;
+  margin: 45px 0;
 }
 .bottomBar {
   position: fixed;
-  bottom: 0px;
+  bottom: -2px !important;
   z-index: 10;
 }
-
 ::-webkit-scrollbar {
   display: none;
 }
