@@ -38,5 +38,10 @@ export default {
   },
   deleteDataBase(nomeDoDB, id) {
     return db.collection(nomeDoDB).doc({ id: id }).delete()
+  },
+  adicionaCarroCliente(id, carro) {
+    return db.collection('clientes').doc({ id: id }).update({
+      carro: [carro]
+    })
   }
 };

@@ -495,8 +495,8 @@ export default {
     ableForm: false,
     dialogSelecionado: undefined,
     //obj IndexDB itensClient
-    itemsClientDB: {},
-    itemsCarroDB: {},
+    itemsClientDB: [],
+    itemsCarroDB: [],
   }),
   mounted() {
     this.getDBs();
@@ -606,7 +606,7 @@ export default {
             nome: this.name,
             dtNascimento: this.dtNasc,
             cpf: this.cpf,
-            carros: [],
+            carro: [],
           };
           this.itemsClient.push({
             avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
@@ -633,11 +633,9 @@ export default {
             subtitle: `Ano: ${this.ano}, Placa: ${this.placa}`,
           });
 
-          let indexClientCarro = this.itemsClientDB.findIndex(f => {
-            f.nome === this.clientsName
-            console.log(f.nome)
-          })
-            
+          let indexClientCarro = this.itemsClientDB.findIndex(f => f.nome === this.clientsName)
+
+          indexDb.adicionaCarroCliente(indexClientCarro, this.carro)
 
           indexDb.newDataBase("carros", DBobjCarros);
           this.itemsCarrosDB.push(DBobjCarros);
