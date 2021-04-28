@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar color="#35f073" fixed dense dark>
+    <v-app-bar class="topBarColor" fixed dense dark>
       <v-toolbar-title>{{ pageName }}</v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -43,4 +43,10 @@ export default {
   },
 };
 </script>
-<style lang="scss"></style>
+<style lang="scss">
+.topBarColor{
+  background: #c04848; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #c04848, #480048); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #c04848, #480048)
+}
+</style>

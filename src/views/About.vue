@@ -480,7 +480,7 @@ import indexDb from "../indexedDB/indexdb";
 import { mask } from "vue-the-mask";
 
 const gradients = [
-    ["#348f50", '#56b4d3'],
+    ["#ff512f", '#dd2476'],
   ] 
   export default {
     directives: { mask },
