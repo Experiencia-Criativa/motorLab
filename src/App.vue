@@ -27,6 +27,7 @@ export default {
 }
 .router {
   margin: 45px 0;
+  overflow-x: hidden;
 }
 .bottomBar {
   position: fixed;

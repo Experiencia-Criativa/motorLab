@@ -574,6 +574,7 @@ const gradients = [
     },
     deleteClient(index) {
       indexDb.deleteDataBase("clientes", this.itemsClientDB[index].id)
+      this.itemsClientDB.splice(index,1)
       this.itemsClient.splice(index, 1);
     },
     validate() {
