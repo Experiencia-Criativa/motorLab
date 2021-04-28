@@ -19,6 +19,13 @@ db.collection("clientes")
         cpf: "423.423.423-45",
         carro: ["Porsche", "Ferrari"],
       });
+      db.collection("carros").add({
+        id: 0,
+        carro: "Sandero",
+        clientsName: "Raggi",
+        placa: "abc123",
+        ano: 2016
+      })
     }
   });
 

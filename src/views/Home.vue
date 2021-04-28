@@ -1,6 +1,6 @@
 <template>
-<div>
-<!--===============Dialog Cliente==================-->
+  <div>
+    <!--===============Dialog Cliente==================-->
     <v-dialog v-model="dialogClient" width="600">
       <v-card>
         <v-card-title>
@@ -353,125 +353,100 @@
       </v-card>
     </v-dialog>
     <!--===============FIM Dialog Peças==============================-->
-  <v-container>
-    <v-row>
-      <v-col cols="12">
-        <v-card
-          color="#333"
-          dark
-          style="border-radius: 333"
-        >
-          <v-card-title class="text-h5">
-            Seja bem-vindo ao MotorLab
-          </v-card-title>
-          <v-card-subtitle>Um sistema pensado para melhor funcionamento de sua oficina</v-card-subtitle>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="6">
-        <v-card
-          color="#333"
-          dark
-          style="border-radius: 333"
-        >
-          <v-card-title class="text-h5">
-            Clientes
-          </v-card-title>
+    <v-container>
+      <v-row>
+        <v-col cols="12">
+          <v-card color="#333" dark style="border-radius: 333">
+            <v-card-title class="text-h5">
+              Seja bem-vindo ao MotorLab
+            </v-card-title>
+            <v-card-subtitle
+              >Um sistema pensado para melhor funcionamento de sua
+              oficina</v-card-subtitle
+            >
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="6">
+          <v-card color="#333" dark style="border-radius: 333">
+            <v-card-title class="text-h5"> Clientes </v-card-title>
 
-          <v-card-subtitle>Faça todo o cadastro e manutenção do seus clientes</v-card-subtitle>
+            <v-card-subtitle
+              >Faça todo o cadastro e manutenção do seus
+              clientes</v-card-subtitle
+            >
 
-          <v-card-actions>
-            <v-btn text @click="sideBarButtons(0)">
-              Clique aqui
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-      <v-col cols="6">
-        <v-card
-          color="#333"
-          dark
-          style="border-radius: 333"
-        >
-          <v-card-title class="text-h5">
-            Carros
-          </v-card-title>
+            <v-card-actions>
+              <v-btn text @click="sideBarButtons(0)"> Clique aqui </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+        <v-col cols="6">
+          <v-card color="#333" dark style="border-radius: 333">
+            <v-card-title class="text-h5"> Carros </v-card-title>
 
-          <v-card-subtitle>Faça todo o cadastro de veiculo do seus clientes hoje mesmo</v-card-subtitle>
+            <v-card-subtitle
+              >Faça todo o cadastro de veiculo do seus clientes hoje
+              mesmo</v-card-subtitle
+            >
 
-          <v-card-actions>
-            <v-btn text @click="sideBarButtons(1)">
-              Clique aqui
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-card
-          color="#333"
-          dark
-          style="border-radius: 333"
-        >
-          <v-card-title class="text-h5">
-            Utilização nos ultimos dias
-          </v-card-title>
-          <v-sparkline
-          :fill="fill"
-          :gradient="selectedGradient"
-          :line-width="width"
-          padding="10"
-          smooth="20"
-          :value="value"
-          auto-draw
-          ></v-sparkline>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="6">
-        <v-card
-          color="#333"
-          dark
-          style="border-radius: 333"
-        >
-         <v-card-title class="text-h5">
-            Fornecedores
-          </v-card-title>
+            <v-card-actions>
+              <v-btn text @click="sideBarButtons(1)"> Clique aqui </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <v-card color="#333" dark style="border-radius: 333">
+            <v-card-title class="text-h5">
+              Utilização nos ultimos dias
+            </v-card-title>
+            <v-sparkline
+              :fill="fill"
+              :gradient="selectedGradient"
+              :line-width="width"
+              padding="10"
+              smooth="20"
+              :value="value"
+              auto-draw
+            ></v-sparkline>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="6">
+          <v-card color="#333" dark style="border-radius: 333">
+            <v-card-title class="text-h5"> Fornecedores </v-card-title>
 
-          <v-card-subtitle>Faça todo o cadastro e manutenção do seus clientes</v-card-subtitle>
+            <v-card-subtitle
+              >Faça todo o cadastro e manutenção do seus
+              clientes</v-card-subtitle
+            >
 
-          <v-card-actions>
-            <v-btn text @click="sideBarButtons(2)">
-              Clique aqui
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-      <v-col cols="6">
-        <v-card
-          color="#333"
-          dark
-          style="border-radius: 333"
-        >
-         <v-card-title class="text-h5">
-            Peças
-          </v-card-title>
+            <v-card-actions>
+              <v-btn text @click="sideBarButtons(2)"> Clique aqui </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+        <v-col cols="6">
+          <v-card color="#333" dark style="border-radius: 333">
+            <v-card-title class="text-h5"> Peças </v-card-title>
 
-          <v-card-subtitle>Faça todo o cadastro e manutenção do seus clientes</v-card-subtitle>
+            <v-card-subtitle
+              >Faça todo o cadastro e manutenção do seus
+              clientes</v-card-subtitle
+            >
 
-          <v-card-actions>
-            <v-btn text @click="sideBarButtons(3)">
-              Clique aqui
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
-</div>
+            <v-card-actions>
+              <v-btn text @click="sideBarButtons(3)"> Clique aqui </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -479,67 +454,76 @@ import swal from "sweetalert2";
 import indexDb from "../indexedDB/indexdb";
 import { mask } from "vue-the-mask";
 
-const gradients = [
-    ["#ff512f", '#dd2476'],
-  ] 
-  export default {
-    directives: { mask },
-    component: { swal },
-    data: () => ({
-      fill: true,
-      selectedGradient: gradients[0],
-      gradients,
-      value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
-      width: 2,
+const gradients = [["#ff512f", "#dd2476"]];
+export default {
+  directives: { mask },
+  component: { swal },
+  data: () => ({
+    fill: true,
+    selectedGradient: gradients[0],
+    gradients,
+    value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
+    width: 2,
 
-      dialogClient: false,
-      dialogForne: false,
-      dialogCar: false,
-      dialogParts: false,
+    dialogClient: false,
+    dialogForne: false,
+    dialogCar: false,
+    dialogParts: false,
 
-      itemsClient: [],
-      itemsForne: [],
-      itemsCarros: [],
-      itemsPecas: [],
-      valid: false,
+    itemsClient: [],
+    itemsForne: [],
+    itemsCarros: [],
+    itemsPecas: [],
+    valid: false,
 
-      //form cliente
-      name: "",
-      cpf: "",
-      dtNasc: "",
-      //form Fornecedor
-      cnpj: "",
-      //form Carro
-      carro: "",
-      placa: "",
-      ano: "",
-      clientsName: "",
-      clienteSelecionado: [],
-      //form Peca
-      codPeca: "",
-      // fim forms
+    //form cliente
+    name: "",
+    cpf: "",
+    dtNasc: "",
+    //form Fornecedor
+    cnpj: "",
+    //form Carro
+    carro: "",
+    placa: "",
+    ano: "",
+    clientsName: "",
+    clienteSelecionado: [],
+    //form Peca
+    codPeca: "",
+    // fim forms
 
-      ableForm: false,
-      dialogSelecionado: undefined,
-      //obj IndexDB itensClient
-      itemsClientDB: {},
-    }),
-      mounted() {
-    this.getDBs()
+    ableForm: false,
+    dialogSelecionado: undefined,
+    //obj IndexDB itensClient
+    itemsClientDB: {},
+    itemsCarroDB: {},
+  }),
+  mounted() {
+    this.getDBs();
   },
   methods: {
-    getDBs(){
+    getDBs() {
       indexDb.getDataBase("clientes").then((clientes) => {
         this.itemsClientDB = clientes;
-        this.itemsClientDB.forEach(f => {
-        this.itemsClient.push({
-          avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-          nomeCliente: f.nome,
-          subtitle: `Dt. Nascimento: ${f.dtNascimento}, CPF: ${f.cpf}`,
+        this.itemsClientDB.forEach((f) => {
+          this.itemsClient.push({
+            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+            nomeCliente: f.nome,
+            subtitle: `Dt. Nascimento: ${f.dtNascimento}, CPF: ${f.cpf}`,
+          });
+        });
+      });
+      indexDb.getDataBase("carros").then((carros) => {
+        this.itemsCarrosDB = carros;
+        this.itemsCarrosDB.forEach((f) => {
+          this.itemsCarros.push({
+            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+            nomeCarro: `${f.carro} / ${f.clientsName}`,
+            subtitle: `Ano: ${f.ano}, Placa: ${f.placa}`,
+          })
         })
       })
-    });
-  },
+    },
     sideBarButtons(item) {
       switch (item) {
         case 0:
@@ -573,8 +557,8 @@ const gradients = [
       }
     },
     deleteClient(index) {
-      indexDb.deleteDataBase("clientes", this.itemsClientDB[index].id)
-      this.itemsClientDB.splice(index,1)
+      indexDb.deleteDataBase("clientes", this.itemsClientDB[index].id);
+      this.itemsClientDB.splice(index, 1);
       this.itemsClient.splice(index, 1);
     },
     validate() {
@@ -613,32 +597,52 @@ const gradients = [
       this.ableForm = false;
     },
     addArray(dialogSelecionado) {
-      let ult = this.itemsClientDB.length - 1
+      let ult = this.itemsClientDB.length - 1;
+      let ultCarros = this.itemsCarrosDB.length - 1;
       switch (dialogSelecionado) {
         case 0:
-          let DBobj = {
+          let DBobjClient = {
             id: this.itemsClientDB[ult].id + 1,
             nome: this.name,
             dtNascimento: this.dtNasc,
             cpf: this.cpf,
-            carros: []
-          }
+            carros: [],
+          };
           this.itemsClient.push({
             avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
             nomeCliente: this.name,
             subtitle: `Dt. Nascimento: ${this.dtNasc}, CPF: ${this.cpf}`,
           });
-          indexDb.newDataBase('clientes', DBobj)
-          this.itemsClientDB.push(DBobj)
+          indexDb.newDataBase("clientes", DBobjClient);
+          this.itemsClientDB.push(DBobjClient);
           this.resetValidation();
           break;
         case 1:
+
+          let DBobjCarros = {
+            id: this.itemsCarrosDB[ultCarros].id + 1,
+            carro: this.carro,
+            clientsName: this.clientsName,
+            placa: this.placa,
+            ano: this.ano,
+          };
+
           this.itemsCarros.push({
             avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
             nomeCarro: `${this.carro} / ${this.clientsName}`,
             subtitle: `Ano: ${this.ano}, Placa: ${this.placa}`,
           });
+
+          let indexClientCarro = this.itemsClientDB.findIndex(f => {
+            f.nome === this.clientsName
+            console.log(f.nome)
+          })
+            
+
+          indexDb.newDataBase("carros", DBobjCarros);
+          this.itemsCarrosDB.push(DBobjCarros);
           this.resetValidation();
+
           break;
         case 2:
           this.itemsForne.push({
@@ -664,11 +668,11 @@ const gradients = [
       });
     },
   },
-  }
+};
 </script>
 
 <style>
-.col-6{
+.col-6 {
   padding: 15px 8px !important;
 }
 </style>
