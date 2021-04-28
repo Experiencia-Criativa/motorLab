@@ -13,7 +13,7 @@
       </div>
     </v-sheet>
   </v-bottom-sheet>
-  <v-bottom-navigation v-model="value">
+  <v-bottom-navigation>
     <v-btn value="recent" @click="changeRoute(0)">
       <span>Agenda</span>
 
@@ -37,22 +37,21 @@
 <script>
 export default {
   data: () => ({
-     value: "recent",
      sheet: false,
    }),
   methods: {
     changeRoute(value) {
       switch (value) {
-        case 0:
-          if(this.$route.path !== '/') {
-            this.$router.push('/')
-          }
-          break;
-        case 1:
-          if(this.$route.path !== '/about') {
-            this.$router.push('/about')
-          }
-          break;
+      case 0:
+        if(this.$route.path !== '/agenda') {
+          this.$router.push('/agenda')
+        }
+        break;
+      case 1:
+        if(this.$route.path !== '/') {
+          this.$router.push('/')
+        }
+        break;
       }
     }
   }
