@@ -453,6 +453,7 @@
 import swal from "sweetalert2";
 import indexDb from "../indexedDB/indexdb";
 import { mask } from "vue-the-mask";
+import axios from 'axios';
 
 const gradients = [["#ff512f", "#dd2476"]];
 export default {
@@ -528,6 +529,13 @@ export default {
       switch (item) {
         case 0:
           this.dialogClient = true;
+          axios.post('http://localhost:3001/api/insert', {
+            Name: 'Fred',
+            cpf: '123'
+          })
+          .then(function (response) {
+            console.log(response);
+          })
           this.ableForm = false;
           this.dialogSelecionado = item;
           break;
