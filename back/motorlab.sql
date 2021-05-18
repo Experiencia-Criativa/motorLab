@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 12-Maio-2021 às 06:50
+-- Tempo de geração: 18-Maio-2021 às 15:01
 -- Versão do servidor: 10.4.14-MariaDB
 -- versão do PHP: 7.4.10
 
@@ -26,29 +26,27 @@ USE `motorlab`;
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `veiculos`
---
-
-CREATE TABLE `veiculos` (
-  `veiculo_id` int(10) NOT NULL,
-  `cpf` int(11) NOT NULL,
-  `modelo` varchar(60) NOT NULL,
-  `ano` int(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Estrutura da tabela `clientes`
 --
 
 CREATE TABLE `clientes` (
   `clientes_id` int(10) NOT NULL,
-  `cpf` int(11) NOT NULL,
+  `cpf` varchar(11) NOT NULL,
   `nome` varchar(60) NOT NULL,
   `email` varchar(60) NOT NULL,
-  `dt_nascimento` int(8) NOT NULL
+  `dt_nascimento` int(8) NOT NULL,
+  `dt_incis` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `clientes`
+--
+
+INSERT INTO `clientes` (`clientes_id`, `cpf`, `nome`, `email`, `dt_nascimento`, `dt_incis`) VALUES
+(1, '50669793876', 'fernando risso', 'fernando.risso@pucpr.com.br', 20000822, '2021-05-17 22:34:43'),
+(2, '', 'inception', '', 0, '0000-00-00 00:00:00'),
+(3, '', 'good movie', '', 0, '0000-00-00 00:00:00'),
+(4, '', 'oiiiii', '', 0, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -60,7 +58,8 @@ CREATE TABLE `eventos` (
   `eventos_id` int(10) NOT NULL,
   `nome` varchar(60) NOT NULL,
   `dt_inicio` int(12) NOT NULL,
-  `dt_fim` int(12) NOT NULL
+  `dt_fim` int(12) NOT NULL,
+  `dt_inciss` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -72,7 +71,8 @@ CREATE TABLE `eventos` (
 CREATE TABLE `fornecedores` (
   `fornecedores_id` int(10) NOT NULL,
   `cnpj` int(14) NOT NULL,
-  `nome_inst` varchar(60) NOT NULL
+  `nome_inst` varchar(60) NOT NULL,
+  `dt_incis` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -84,7 +84,22 @@ CREATE TABLE `fornecedores` (
 CREATE TABLE `pecas` (
   `pecas_id` int(10) NOT NULL,
   `nome_peca` varchar(60) NOT NULL,
-  `cnpj` int(14) NOT NULL
+  `cnpj` int(14) NOT NULL,
+  `dt_incis` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `veiculos`
+--
+
+CREATE TABLE `veiculos` (
+  `veiculo_id` int(10) NOT NULL,
+  `cpf` int(11) NOT NULL,
+  `modelo` varchar(60) NOT NULL,
+  `ano` int(4) NOT NULL,
+  `dt_incis` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -92,16 +107,10 @@ CREATE TABLE `pecas` (
 --
 
 --
--- Índices para tabela `veiculos`
---
-ALTER TABLE `veiculos`
-  ADD PRIMARY KEY (`veiculo_id`,`cpf`);
-
---
 -- Índices para tabela `clientes`
 --
 ALTER TABLE `clientes`
-  ADD PRIMARY KEY (`clientes_id`,`cpf`);
+  ADD PRIMARY KEY (`clientes_id`);
 
 --
 -- Índices para tabela `eventos`
@@ -113,29 +122,29 @@ ALTER TABLE `eventos`
 -- Índices para tabela `fornecedores`
 --
 ALTER TABLE `fornecedores`
-  ADD PRIMARY KEY (`fornecedores_id`,`cnpj`);
+  ADD PRIMARY KEY (`fornecedores_id`);
 
 --
 -- Índices para tabela `pecas`
 --
 ALTER TABLE `pecas`
-  ADD PRIMARY KEY (`pecas_id`,`cnpj`);
+  ADD PRIMARY KEY (`pecas_id`);
+
+--
+-- Índices para tabela `veiculos`
+--
+ALTER TABLE `veiculos`
+  ADD PRIMARY KEY (`veiculo_id`);
 
 --
 -- AUTO_INCREMENT de tabelas despejadas
 --
 
 --
--- AUTO_INCREMENT de tabela `veiculos`
---
-ALTER TABLE `veiculos`
-  MODIFY `veiculo_id` int(10) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de tabela `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `clientes_id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `clientes_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `eventos`
@@ -150,10 +159,14 @@ ALTER TABLE `fornecedores`
   MODIFY `fornecedores_id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `pecas`
+-- Restrições para despejos de tabelas
 --
-ALTER TABLE `pecas`
-  MODIFY `pecas_id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- Limitadores para a tabela `veiculos`
+--
+ALTER TABLE `veiculos`
+  ADD CONSTRAINT `carros_ibfk_1` FOREIGN KEY (`veiculo_id`) REFERENCES `clientes` (`clientes_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
