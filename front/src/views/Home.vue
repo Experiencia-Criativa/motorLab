@@ -1,468 +1,455 @@
 <template>
   <div>
-    <!--===============Dialog Cliente==================-->
-    <v-dialog v-model="dialogClient" width="600">
-      <v-card>
-        <v-card-title>
-          Clientes
-          <v-btn color="#ededed" icon text @click="openForm">
-            <v-icon> add </v-icon>
-          </v-btn>
-        </v-card-title>
+    <div>
+      <!--===============Dialog Cliente==================-->
+      <v-dialog v-model="dialogClient" width="600">
+        <v-card>
+          <v-card-title>
+            Clientes
+            <v-btn color="#ededed" icon text @click="openForm">
+              <v-icon> add </v-icon>
+            </v-btn>
+          </v-card-title>
 
-        <v-divider></v-divider>
+          <v-divider></v-divider>
 
-        <v-container v-if="ableForm">
-          <v-form
-            ref="form"
-            v-model="valid"
-            lazy-validation
-            style="padding: 20px"
-          >
-            <v-text-field
-              v-model="name"
-              label="Nome"
-              required
-              @keyup="validate"
-            ></v-text-field>
-
-            <v-menu
-              v-model="menu2"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
+          <v-container v-if="ableForm">
+            <v-form
+              ref="form"
+              v-model="valid"
+              lazy-validation
+              style="padding: 20px"
             >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="dtNasc"
-                  label="Picker without buttons"
-                  append-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                >
-              </v-text-field>
-              </template>
-              <v-date-picker
+              <v-text-field
+                v-model="name"
+                label="Nome"
+                required
+                @keyup="validate"
+              ></v-text-field>
+
+              <v-text-field
                 v-model="dtNasc"
-                @input="menu2 = false"
-              ></v-date-picker>
-            </v-menu>
+                label="Data de Nascimento"
+                v-mask="'##/##/####'"
+                required
+                @keyup="validate"
+              ></v-text-field>
 
-            <v-text-field
-              v-model="cpf"
-              label="CPF"
-              v-mask="['###.###.###-##']"
-              required
-              @keyup="validate"
-            ></v-text-field>
+              <v-text-field
+                v-model="cpf"
+                label="CPF"
+                v-mask="['###.###.###-##']"
+                required
+                @keyup="validate"
+              ></v-text-field>
 
-            <v-btn
-              :disabled="valid"
-              color="success"
-              class="mr-4"
-              @click="addArray(dialogSelecionado)"
-            >
-              Salvar
-            </v-btn>
+              <v-btn
+                :disabled="valid"
+                color="success"
+                class="mr-4"
+                @click="addArray(dialogSelecionado)"
+              >
+                Salvar
+              </v-btn>
 
-            <v-btn color="error" @click="resetValidation"> Cancelar </v-btn>
-          </v-form>
+              <v-btn color="error" @click="resetValidation"> Cancelar </v-btn>
+            </v-form>
 
-          <v-divider></v-divider>
-        </v-container>
+            <v-divider></v-divider>
+          </v-container>
 
-        <v-card
-          max-width="100%"
-          max-height="100%"
-          class="mx-auto"
-          style="margin: 0 !important"
-        >
-          <v-list three-line>
-            <template v-for="(item, index) in itemsClient">
-              <v-divider
-                v-if="item.divider"
-                :key="index"
-                :inset="item.inset"
-              ></v-divider>
-
-              <v-list-item v-else :key="item.nomeCliente">
-                <v-list-item-avatar>
-                  <v-img :src="item.avatar"></v-img>
-                </v-list-item-avatar>
-
-                <v-list-item-content>
-                  <v-list-item-title
-                    v-html="item.nomeCliente"
-                  ></v-list-item-title>
-                  <v-list-item-subtitle
-                    v-html="item.subtitle"
-                  ></v-list-item-subtitle>
-                </v-list-item-content>
-                <v-btn color="#ededed" icon text @click="deleteClient(index)">
-                  <v-icon> delete </v-icon>
-                </v-btn>
-              </v-list-item>
-            </template>
-          </v-list>
-        </v-card>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!--===============FIM Dialog Cliente==================-->
-    <!--===============Dialog Fornecedor===================-->
-    <v-dialog v-model="dialogForne" width="600">
-      <v-card>
-        <v-card-title>
-          Fornecedores
-          <v-btn color="#ededed" icon text @click="openForm">
-            <v-icon> add </v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-divider></v-divider>
-        <v-container v-if="ableForm">
-          <v-form
-            ref="form"
-            v-model="valid"
-            lazy-validation
-            style="padding: 20px"
+          <v-card
+            max-width="100%"
+            max-height="100%"
+            class="mx-auto"
+            style="margin: 0 !important"
           >
-            <v-text-field
-              v-model="name"
-              label="Nome"
-              required
-              @keyup="validate"
-            ></v-text-field>
+            <v-list three-line>
+              <template v-for="(item, index) in itemsClient">
+                <v-divider
+                  v-if="item.divider"
+                  :key="index"
+                  :inset="item.inset"
+                ></v-divider>
 
-            <v-text-field
-              v-model="dtNasc"
-              label="Cod.Fornecedor"
-              required
-              @keyup="validate"
-            ></v-text-field>
+                <v-list-item v-else :key="item.nomeCliente">
+                  <v-list-item-avatar>
+                    <v-img :src="item.avatar"></v-img>
+                  </v-list-item-avatar>
 
-            <v-text-field
-              v-model="cnpj"
-              label="CNPJ"
-              required
-              @keyup="validate"
-            ></v-text-field>
+                  <v-list-item-content>
+                    <v-list-item-title
+                      v-html="item.nomeCliente"
+                    ></v-list-item-title>
+                    <v-list-item-subtitle
+                      v-html="item.subtitle"
+                    ></v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-btn color="#ededed" icon text @click="deleteClient(index)">
+                    <v-icon> delete </v-icon>
+                  </v-btn>
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-card>
 
-            <v-btn
-              :disabled="valid"
-              color="success"
-              class="mr-4"
-              @click="addArray(dialogSelecionado)"
-            >
-              Salvar
-            </v-btn>
-
-            <v-btn color="error" @click="resetValidation"> Cancelar </v-btn>
-          </v-form>
-          <v-divider></v-divider>
-        </v-container>
-        <v-card max-width="100%" class="mx-auto">
-          <v-list three-line>
-            <template v-for="(item, index) in itemsForne">
-              <v-divider
-                v-if="item.divider"
-                :key="index"
-                :inset="item.inset"
-              ></v-divider>
-
-              <v-list-item v-else :key="item.nomeForne">
-                <v-list-item-avatar>
-                  <v-img :src="item.avatar"></v-img>
-                </v-list-item-avatar>
-
-                <v-list-item-content>
-                  <v-list-item-title
-                    v-html="item.nomeForne"
-                  ></v-list-item-title>
-                  <v-list-item-subtitle
-                    v-html="item.subtitle"
-                  ></v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-          </v-list>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+          </v-card-actions>
         </v-card>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!--===============FIM Dialog Fornecdor==================-->
-    <!--===============Dialog Carros=========================-->
-    <v-dialog v-model="dialogCar" width="600">
-      <v-card>
-        <v-card-title>
-          Carros
-          <v-btn color="#ededed" icon @click="openForm">
-            <v-icon> add </v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-divider></v-divider>
-        <v-container v-if="ableForm">
-          <v-form
-            ref="form"
-            v-model="valid"
-            lazy-validation
-            style="padding: 20px"
-          >
-            <v-text-field
-              v-model="carro"
-              label="Nome do carro"
-              required
-              @keyup="validate"
-            ></v-text-field>
-            <v-select
-              v-model="clientsName"
-              :items="clienteSelecionado"
-              label="Selecione o nome do cliente"
-              required
-              @blur="validate"
-            />
-            <v-text-field
-              v-model="placa"
-              label="Placa"
-              required
-              @keyup="validate"
-            ></v-text-field>
-
-            <v-text-field
-              v-model="ano"
-              label="Ano"
-              required
-              @keyup="validate"
-            ></v-text-field>
-
-            <v-btn
-              :disabled="valid"
-              color="success"
-              class="mr-4"
-              @click="addArray(dialogSelecionado)"
-            >
-              Salvar
+      </v-dialog>
+      <!--===============FIM Dialog Cliente==================-->
+      <!--===============Dialog Fornecedor===================-->
+      <v-dialog v-model="dialogForne" width="600">
+        <v-card>
+          <v-card-title>
+            Fornecedores
+            <v-btn color="#ededed" icon text @click="openForm">
+              <v-icon> add </v-icon>
             </v-btn>
-
-            <v-btn color="error" @click="resetValidation"> Cancelar </v-btn>
-          </v-form>
+          </v-card-title>
           <v-divider></v-divider>
-        </v-container>
-        <v-card max-width="100%" class="mx-auto">
-          <v-list three-line>
-            <template v-for="(item, index) in itemsCarros">
-              <v-divider
-                v-if="item.divider"
-                :key="index"
-                :inset="item.inset"
-              ></v-divider>
-
-              <v-list-item v-else :key="item.nomeCarro">
-                <v-list-item-avatar>
-                  <v-img :src="item.avatar"></v-img>
-                </v-list-item-avatar>
-
-                <v-list-item-content>
-                  <v-list-item-title
-                    v-html="item.nomeCarro"
-                  ></v-list-item-title>
-                  <v-list-item-subtitle
-                    v-html="item.subtitle"
-                  ></v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-          </v-list>
-        </v-card>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!--===============FIM Dialog Carros=========================-->
-    <!--===============Dialog Peças==============================-->
-    <v-dialog v-model="dialogParts" width="600">
-      <v-card>
-        <v-card-title>
-          Peças
-          <v-btn color="#ededed" icon @click="openForm">
-            <v-icon> add </v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-divider></v-divider>
-        <v-container v-if="ableForm">
-          <v-form
-            ref="form"
-            v-model="valid"
-            lazy-validation
-            style="padding: 20px"
-          >
-            <v-text-field
-              v-model="name"
-              label="Nome"
-              required
-              @keyup="validate"
-            ></v-text-field>
-
-            <v-text-field
-              v-model="carro"
-              label="Carro"
-              required
-              @keyup="validate"
-            ></v-text-field>
-
-            <v-text-field
-              v-model="codPeca"
-              label="Cod. Peca"
-              required
-              @keyup="validate"
-            ></v-text-field>
-
-            <v-btn
-              :disabled="valid"
-              color="success"
-              class="mr-4"
-              @click="addArray(dialogSelecionado)"
+          <v-container v-if="ableForm">
+            <v-form
+              ref="form"
+              v-model="valid"
+              lazy-validation
+              style="padding: 20px"
             >
-              Salvar
+              <v-text-field
+                v-model="name"
+                label="Nome"
+                required
+                @keyup="validate"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="dtNasc"
+                label="Cod.Fornecedor"
+                required
+                @keyup="validate"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="cnpj"
+                label="CNPJ"
+                required
+                @keyup="validate"
+              ></v-text-field>
+
+              <v-btn
+                :disabled="valid"
+                color="success"
+                class="mr-4"
+                @click="addArray(dialogSelecionado)"
+              >
+                Salvar
+              </v-btn>
+
+              <v-btn color="error" @click="resetValidation"> Cancelar </v-btn>
+            </v-form>
+            <v-divider></v-divider>
+          </v-container>
+          <v-card max-width="100%" class="mx-auto">
+            <v-list three-line>
+              <template v-for="(item, index) in itemsForne">
+                <v-divider
+                  v-if="item.divider"
+                  :key="index"
+                  :inset="item.inset"
+                ></v-divider>
+
+                <v-list-item v-else :key="item.nomeForne">
+                  <v-list-item-avatar>
+                    <v-img :src="item.avatar"></v-img>
+                  </v-list-item-avatar>
+
+                  <v-list-item-content>
+                    <v-list-item-title
+                      v-html="item.nomeForne"
+                    ></v-list-item-title>
+                    <v-list-item-subtitle
+                      v-html="item.subtitle"
+                    ></v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-card>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!--===============FIM Dialog Fornecdor==================-->
+      <!--===============Dialog Carros=========================-->
+      <v-dialog v-model="dialogCar" width="600">
+        <v-card>
+          <v-card-title>
+            Carros
+            <v-btn color="#ededed" icon @click="openForm">
+              <v-icon> add </v-icon>
             </v-btn>
-
-            <v-btn color="error" @click="resetValidation"> Cancelar </v-btn>
-          </v-form>
+          </v-card-title>
           <v-divider></v-divider>
-        </v-container>
-        <v-card max-width="100%" class="mx-auto">
-          <v-list three-line>
-            <template v-for="(item, index) in itemsPecas">
-              <v-divider
-                v-if="item.divider"
-                :key="index"
-                :inset="item.inset"
-              ></v-divider>
+          <v-container v-if="ableForm">
+            <v-form
+              ref="form"
+              v-model="valid"
+              lazy-validation
+              style="padding: 20px"
+            >
+              <v-text-field
+                v-model="carro"
+                label="Nome do carro"
+                required
+                @keyup="validate"
+              ></v-text-field>
+              <v-select
+                v-model="clientsName"
+                :items="clienteSelecionado"
+                label="Selecione o nome do cliente"
+                required
+                @blur="validate"
+              />
+              <v-text-field
+                v-model="placa"
+                label="Placa"
+                required
+                @keyup="validate"
+              ></v-text-field>
 
-              <v-list-item v-else :key="item.nomePeca">
-                <v-list-item-avatar>
-                  <v-img :src="item.avatar"></v-img>
-                </v-list-item-avatar>
+              <v-text-field
+                v-model="ano"
+                label="Ano"
+                required
+                @keyup="validate"
+              ></v-text-field>
 
-                <v-list-item-content>
-                  <v-list-item-title v-html="item.nomePeca"></v-list-item-title>
-                  <v-list-item-subtitle
-                    v-html="item.subtitle"
-                  ></v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-          </v-list>
+              <v-btn
+                :disabled="valid"
+                color="success"
+                class="mr-4"
+                @click="addArray(dialogSelecionado)"
+              >
+                Salvar
+              </v-btn>
+
+              <v-btn color="error" @click="resetValidation"> Cancelar </v-btn>
+            </v-form>
+            <v-divider></v-divider>
+          </v-container>
+          <v-card max-width="100%" class="mx-auto">
+            <v-list three-line>
+              <template v-for="(item, index) in itemsCarros">
+                <v-divider
+                  v-if="item.divider"
+                  :key="index"
+                  :inset="item.inset"
+                ></v-divider>
+
+                <v-list-item v-else :key="item.nomeCarro">
+                  <v-list-item-avatar>
+                    <v-img :src="item.avatar"></v-img>
+                  </v-list-item-avatar>
+
+                  <v-list-item-content>
+                    <v-list-item-title
+                      v-html="item.nomeCarro"
+                    ></v-list-item-title>
+                    <v-list-item-subtitle
+                      v-html="item.subtitle"
+                    ></v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-card>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+          </v-card-actions>
         </v-card>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!--===============FIM Dialog Peças==============================-->
-    <v-container>
-      <v-row>
-        <v-col cols="12">
-          <v-card color="#333" dark style="border-radius: 333">
-            <v-card-title class="text-h5">
-              Seja bem-vindo ao MotorLab
-            </v-card-title>
-            <v-card-subtitle
-              >Um sistema pensado para melhor funcionamento de sua
-              oficina</v-card-subtitle
+      </v-dialog>
+      <!--===============FIM Dialog Carros=========================-->
+      <!--===============Dialog Peças==============================-->
+      <v-dialog v-model="dialogParts" width="600">
+        <v-card>
+          <v-card-title>
+            Peças
+            <v-btn color="#ededed" icon @click="openForm">
+              <v-icon> add </v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-container v-if="ableForm">
+            <v-form
+              ref="form"
+              v-model="valid"
+              lazy-validation
+              style="padding: 20px"
             >
+              <v-text-field
+                v-model="name"
+                label="Nome"
+                required
+                @keyup="validate"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="carro"
+                label="Carro"
+                required
+                @keyup="validate"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="codPeca"
+                label="Cod. Peca"
+                required
+                @keyup="validate"
+              ></v-text-field>
+
+              <v-btn
+                :disabled="valid"
+                color="success"
+                class="mr-4"
+                @click="addArray(dialogSelecionado)"
+              >
+                Salvar
+              </v-btn>
+
+              <v-btn color="error" @click="resetValidation"> Cancelar </v-btn>
+            </v-form>
+            <v-divider></v-divider>
+          </v-container>
+          <v-card max-width="100%" class="mx-auto">
+            <v-list three-line>
+              <template v-for="(item, index) in itemsPecas">
+                <v-divider
+                  v-if="item.divider"
+                  :key="index"
+                  :inset="item.inset"
+                ></v-divider>
+
+                <v-list-item v-else :key="item.nomePeca">
+                  <v-list-item-avatar>
+                    <v-img :src="item.avatar"></v-img>
+                  </v-list-item-avatar>
+
+                  <v-list-item-content>
+                    <v-list-item-title
+                      v-html="item.nomePeca"
+                    ></v-list-item-title>
+                    <v-list-item-subtitle
+                      v-html="item.subtitle"
+                    ></v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-list>
           </v-card>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="6">
-          <v-card color="#333" dark style="border-radius: 333">
-            <v-card-title class="text-h5"> Clientes </v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!--===============FIM Dialog Peças==============================-->
+      <v-container>
+        <v-row>
+          <v-col cols="12">
+            <v-card color="#333" dark style="border-radius: 333">
+              <v-card-title class="text-h5">
+                Seja bem-vindo ao MotorLab
+              </v-card-title>
+              <v-card-subtitle
+                >Um sistema pensado para melhor funcionamento de sua
+                oficina</v-card-subtitle
+              >
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="6">
+            <v-card color="#333" dark style="border-radius: 333">
+              <v-card-title class="text-h5"> Clientes </v-card-title>
 
-            <v-card-subtitle
-              >Faça todo o cadastro e manutenção do seus
-              clientes</v-card-subtitle
-            >
+              <v-card-subtitle
+                >Faça todo o cadastro e manutenção do seus
+                clientes</v-card-subtitle
+              >
 
-            <v-card-actions>
-              <v-btn text @click="sideBarButtons(0)"> Clique aqui </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-        <v-col cols="6">
-          <v-card color="#333" dark style="border-radius: 333">
-            <v-card-title class="text-h5"> Carros </v-card-title>
+              <v-card-actions>
+                <v-btn text @click="sideBarButtons(0)"> Clique aqui </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+          <v-col cols="6">
+            <v-card color="#333" dark style="border-radius: 333">
+              <v-card-title class="text-h5"> Carros </v-card-title>
 
-            <v-card-subtitle
-              >Faça todo o cadastro de veiculo do seus clientes hoje
-              mesmo</v-card-subtitle
-            >
+              <v-card-subtitle
+                >Faça todo o cadastro de veiculo do seus clientes hoje
+                mesmo</v-card-subtitle
+              >
 
-            <v-card-actions>
-              <v-btn text @click="sideBarButtons(1)"> Clique aqui </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12">
-          <v-card color="#333" dark style="border-radius: 333">
-            <v-card-title class="text-h5">
-              Utilização nos ultimos dias
-            </v-card-title>
-            <v-sparkline
-              :fill="fill"
-              :gradient="selectedGradient"
-              :line-width="width"
-              padding="10"
-              smooth="20"
-              :value="value"
-              auto-draw
-            ></v-sparkline>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="6">
-          <v-card color="#333" dark style="border-radius: 333">
-            <v-card-title class="text-h5"> Fornecedores </v-card-title>
+              <v-card-actions>
+                <v-btn text @click="sideBarButtons(1)"> Clique aqui </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12">
+            <v-card color="#333" dark style="border-radius: 333">
+              <v-card-title class="text-h5">
+                Utilização nos ultimos dias
+              </v-card-title>
+              <v-sparkline
+                :fill="fill"
+                :gradient="selectedGradient"
+                :line-width="width"
+                padding="10"
+                smooth="20"
+                :value="value"
+                auto-draw
+              ></v-sparkline>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="6">
+            <v-card color="#333" dark style="border-radius: 333">
+              <v-card-title class="text-h5"> Fornecedores </v-card-title>
 
-            <v-card-subtitle
-              >Faça todo o cadastro e manutenção do seus
-              clientes</v-card-subtitle
-            >
+              <v-card-subtitle
+                >Faça todo o cadastro e manutenção do seus
+                clientes</v-card-subtitle
+              >
 
-            <v-card-actions>
-              <v-btn text @click="sideBarButtons(2)"> Clique aqui </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-        <v-col cols="6">
-          <v-card color="#333" dark style="border-radius: 333">
-            <v-card-title class="text-h5"> Peças </v-card-title>
+              <v-card-actions>
+                <v-btn text @click="sideBarButtons(2)"> Clique aqui </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+          <v-col cols="6">
+            <v-card color="#333" dark style="border-radius: 333">
+              <v-card-title class="text-h5"> Peças </v-card-title>
 
-            <v-card-subtitle
-              >Faça todo o cadastro e manutenção do seus
-              clientes</v-card-subtitle
-            >
+              <v-card-subtitle
+                >Faça todo o cadastro e manutenção do seus
+                clientes</v-card-subtitle
+              >
 
-            <v-card-actions>
-              <v-btn text @click="sideBarButtons(3)"> Clique aqui </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+              <v-card-actions>
+                <v-btn text @click="sideBarButtons(3)"> Clique aqui </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
   </div>
 </template>
 

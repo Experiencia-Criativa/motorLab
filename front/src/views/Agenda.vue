@@ -1,6 +1,7 @@
 /* eslint-disable */
 <template>
   <div>
+  <div>
     <v-dialog
       v-model="verEventoDialog"
       width="600"
@@ -153,6 +154,7 @@
       ></v-calendar>
     </v-sheet>
   </div>
+  </div>
 </template>
 
 <script>
@@ -174,6 +176,7 @@ export default {
       { text: "Mon - Fri", value: [1, 2, 3, 4, 5] },
       { text: "Mon, Wed, Fri", value: [1, 3, 5] },
     ],
+
     events: [],
     eventoSelecionado: [],
     verEventoDialog: false,
@@ -285,7 +288,9 @@ export default {
         });
       }
     },
+    
     // marcar Evento
+    
     agendarEvento(e) {
       this.iconeColor = "#7d7d7d";
       this.iconeTp = "";
@@ -303,6 +308,7 @@ export default {
       this.verEventoDialog = true
       
     },
+    
     deletarEvento(e) {
       let Index = this.events.findIndex(f => f.name === e.name)
       this.events.splice(Index, 1)
@@ -355,5 +361,6 @@ export default {
   right: 20px;
   top: 24px;
 }
+
 </style>
 /* eslint-disable */
