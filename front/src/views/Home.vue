@@ -27,13 +27,29 @@
                 @keyup="validate"
               ></v-text-field>
 
-              <v-text-field
-                v-model="dtNasc"
-                label="Data de Nascimento"
-                v-mask="'##/##/####'"
-                required
-                @keyup="validate"
-              ></v-text-field>
+              <v-menu
+                v-model="menu2"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="dtNasc"
+                    label="Dt. Nascimento"
+                    append-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="dtNasc"
+                  @input="menu2 = false"
+                ></v-date-picker>
+              </v-menu>
 
               <v-text-field
                 v-model="cpf"
@@ -621,7 +637,8 @@ export default {
           });
           console.log(this.dtNasc);
 
-          axios.post("http://localhost:3001/api/insertCliente", {
+          axios
+            .post("http://localhost:3001/api/insertCliente", {
               name: this.name,
               cpf: this.cpf,
               dtNasc: this.dtNasc,
@@ -653,14 +670,15 @@ export default {
             (f) => f.nome === this.clientsName
           );
 
-          axios.post("http://localhost:3001/api/insertCarros", {
-            placa: this.placa,
-            modelo: this.carro,
-            ano: this.ano,
-          })
-          .then(function (response) {
-            console.log(response);
-          });
+          axios
+            .post("http://localhost:3001/api/insertCarros", {
+              placa: this.placa,
+              modelo: this.carro,
+              ano: this.ano,
+            })
+            .then(function (response) {
+              console.log(response);
+            });
 
           indexDb.adicionaCarroCliente(indexClientCarro, this.carro);
 
