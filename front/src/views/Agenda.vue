@@ -115,6 +115,29 @@
         </v-container>
       </v-card>
     </v-dialog>
+    <v-sheet title height="54" class="d-flex">
+      <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>
+      <v-btn outlined class="ma-2" color="white" @click="setToday">
+        Hoje
+      </v-btn>
+      <v-btn
+       outlined 
+       class="ma-2" 
+       color="white" 
+       @click="type === 'month' ? (type = 'day') : (type = 'month')"
+       >
+        {{ type !== 'month' ? 'Dia' : 'Mes' }}
+      </v-btn>
+      <v-spacer></v-spacer>
+      <v-toolbar-title style="margin-top: 12px" v-if="$refs.calendar">
+        {{ $refs.calendar.title }}
+      </v-toolbar-title>
+      <v-btn icon class="ma-2" @click="$refs.calendar.next()">
+        <v-icon>mdi-chevron-right</v-icon>
+      </v-btn>
+    </v-sheet>
     <v-sheet height="775">
       <v-calendar
         ref="calendar"
