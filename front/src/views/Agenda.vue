@@ -1,6 +1,7 @@
 /* eslint-disable */
 <template>
   <div>
+  <div>
     <v-dialog
       v-model="verEventoDialog"
       width="600"
@@ -152,6 +153,7 @@
         @click:event="verEvento"
       ></v-calendar>
     </v-sheet>
+  </div>
   </div>
 </template>
 
