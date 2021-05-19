@@ -26,13 +26,30 @@
               @keyup="validate"
             ></v-text-field>
 
-            <v-text-field
-              v-model="dtNasc"
-              label="Data de Nascimento"
-              v-mask="'##/##/####'"
-              required
-              @keyup="validate"
-            ></v-text-field>
+            <v-menu
+              v-model="menu2"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="dtNasc"
+                  label="Picker without buttons"
+                  append-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                >
+              </v-text-field>
+              </template>
+              <v-date-picker
+                v-model="dtNasc"
+                @input="menu2 = false"
+              ></v-date-picker>
+            </v-menu>
 
             <v-text-field
               v-model="cpf"
@@ -453,7 +470,7 @@
 import swal from "sweetalert2";
 import indexDb from "../indexedDB/indexdb";
 import { mask } from "vue-the-mask";
-import axios from 'axios';
+import axios from "axios";
 
 const gradients = [["#ff512f", "#dd2476"]];
 export default {
@@ -476,6 +493,7 @@ export default {
     itemsCarros: [],
     itemsPecas: [],
     valid: false,
+    menu2: false,
 
     //form cliente
     name: "",
@@ -521,21 +539,14 @@ export default {
             avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
             nomeCarro: `${f.carro} / ${f.clientsName}`,
             subtitle: `Ano: ${f.ano}, Placa: ${f.placa}`,
-          })
-        })
-      })
+          });
+        });
+      });
     },
     sideBarButtons(item) {
       switch (item) {
         case 0:
           this.dialogClient = true;
-          axios.post('http://localhost:3001/api/insert', {
-            Name: 'Fred',
-            cpf: '123'
-          })
-          .then(function (response) {
-            console.log(response);
-          })
           this.ableForm = false;
           this.dialogSelecionado = item;
           break;
@@ -621,12 +632,22 @@ export default {
             nomeCliente: this.name,
             subtitle: `Dt. Nascimento: ${this.dtNasc}, CPF: ${this.cpf}`,
           });
+          console.log(this.dtNasc);
+
+          axios.post("http://localhost:3001/api/insertCliente", {
+              name: this.name,
+              cpf: this.cpf,
+              dtNasc: this.dtNasc,
+            })
+            .then(function (response) {
+              console.log(response);
+            });
+
           indexDb.newDataBase("clientes", DBobjClient);
           this.itemsClientDB.push(DBobjClient);
           this.resetValidation();
           break;
         case 1:
-
           let DBobjCarros = {
             id: this.itemsCarrosDB[ultCarros].id + 1,
             carro: this.carro,
@@ -641,9 +662,20 @@ export default {
             subtitle: `Ano: ${this.ano}, Placa: ${this.placa}`,
           });
 
-          let indexClientCarro = this.itemsClientDB.findIndex(f => f.nome === this.clientsName)
+          let indexClientCarro = this.itemsClientDB.findIndex(
+            (f) => f.nome === this.clientsName
+          );
 
-          indexDb.adicionaCarroCliente(indexClientCarro, this.carro)
+          axios.post("http://localhost:3001/api/insertCarros", {
+            placa: this.placa,
+            modelo: this.carro,
+            ano: this.ano,
+          })
+          .then(function (response) {
+            console.log(response);
+          });
+
+          indexDb.adicionaCarroCliente(indexClientCarro, this.carro);
 
           indexDb.newDataBase("carros", DBobjCarros);
           this.itemsCarrosDB.push(DBobjCarros);
