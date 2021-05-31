@@ -112,7 +112,7 @@
               <v-col>
                 <v-select
                   v-model="formCarro"
-                  label="Carro"
+                  label="Veículo"
                   :color="iconeColor"
                   :append-icon="iconeTp"
                   :items="carro"
@@ -137,7 +137,7 @@
           color="white"
           @click="type === 'month' ? (type = 'day') : (type = 'month')"
         >
-          {{ type !== "month" ? "Dia" : "Mes" }}
+          {{ type !== "month" ? "Mes" : "Dia" }}
         </v-btn>
         <v-btn outlined class="ma-2" color="white"> Favoritos </v-btn>
         <v-spacer></v-spacer>

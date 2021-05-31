@@ -134,6 +134,7 @@
             >
               <v-text-field
                 v-model="name"
+                maxlength="5"
                 label="Nome"
                 required
                 @keyup="validate"
@@ -141,13 +142,14 @@
 
               <v-text-field
                 v-model="dtNasc"
-                label="Cod.Fornecedor"
+                label="Código Fornecedor"
                 required
                 @keyup="validate"
               ></v-text-field>
 
               <v-text-field
                 v-model="cnpj"
+                v-mask="['##.###.###/####-##']"
                 label="CNPJ"
                 required
                 @keyup="validate"
@@ -320,7 +322,7 @@
 
               <v-text-field
                 v-model="codPeca"
-                label="Cod. Peca"
+                label="Código Peça"
                 required
                 @keyup="validate"
               ></v-text-field>
