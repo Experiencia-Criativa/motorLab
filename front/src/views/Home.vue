@@ -199,11 +199,11 @@
         </v-card>
       </v-dialog>
       <!--===============FIM Dialog Fornecdor==================-->
-      <!--===============Dialog Carros=========================-->
+      <!--===============Dialog Veiculos=========================-->
       <v-dialog v-model="dialogCar" width="600">
         <v-card>
           <v-card-title>
-            Carros
+            Veiculos
             <v-btn color="#ededed" icon @click="openForm">
               <v-icon> add </v-icon>
             </v-btn>
@@ -216,12 +216,6 @@
               lazy-validation
               style="padding: 20px"
             >
-              <v-text-field
-                v-model="carro"
-                label="Nome do carro"
-                required
-                @keyup="validate"
-              ></v-text-field>
               <v-select
                 v-model="clientsName"
                 :items="clienteSelecionado"
@@ -229,6 +223,12 @@
                 required
                 @blur="validate"
               />
+              <v-text-field
+                v-model="carro"
+                label="Nome do modelo"
+                required
+                @keyup="validate"
+              ></v-text-field>
               <v-text-field
                 v-model="placa"
                 label="Placa"
@@ -242,7 +242,6 @@
                 required
                 @keyup="validate"
               ></v-text-field>
-
               <v-btn
                 :disabled="valid"
                 color="success"
@@ -251,7 +250,6 @@
               >
                 Salvar
               </v-btn>
-
               <v-btn color="error" @click="resetValidation"> Cancelar </v-btn>
             </v-form>
             <v-divider></v-divider>
@@ -288,7 +286,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <!--===============FIM Dialog Carros=========================-->
+      <!--===============FIM Dialog Veiculos=========================-->
       <!--===============Dialog Peças==============================-->
       <v-dialog v-model="dialogParts" width="600">
         <v-card>
@@ -315,7 +313,7 @@
 
               <v-text-field
                 v-model="carro"
-                label="Carro"
+                label="Veiculo"
                 required
                 @keyup="validate"
               ></v-text-field>
@@ -403,7 +401,7 @@
           </v-col>
           <v-col cols="6">
             <v-card color="#333" dark style="border-radius: 333">
-              <v-card-title class="text-h5"> Carros </v-card-title>
+              <v-card-title class="text-h5"> Veiculos </v-card-title>
 
               <v-card-subtitle
                 >Faça todo o cadastro de veiculo do seus clientes hoje
@@ -504,7 +502,7 @@ export default {
     dtNasc: "",
     //form Fornecedor
     cnpj: "",
-    //form Carro
+    //form Veiculo
     carro: "",
     placa: "",
     ano: "",
@@ -596,7 +594,7 @@ export default {
         this.placa !== "" &&
         this.clientsName !== ""
       ) {
-        // Carro
+        // Veiculo
         this.valid = false;
       } else if (this.name !== "" && this.carro !== "" && this.codPeca !== "") {
         // peca
@@ -699,7 +697,7 @@ export default {
           this.itemsPecas.push({
             avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
             nomePeca: this.name,
-            subtitle: `Carro: ${this.carro}, Cod: ${this.codPeca}`,
+            subtitle: `Veiculo: ${this.carro}, Cod: ${this.codPeca}`,
           });
           this.resetValidation();
           break;

@@ -44,9 +44,13 @@ export default {
 };
 </script>
 <style lang="scss">
-.topBarColor{
+.topBarColor {
   background: #c04848; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #c04848, #480048); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #c04848, #480048)
+  background: -webkit-linear-gradient(
+    to right,
+    #c04848,
+    #480048
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #c04848, #480048);
 }
 </style>

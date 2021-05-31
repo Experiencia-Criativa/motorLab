@@ -1,159 +1,169 @@
-/* eslint-disable */
 <template>
   <div>
-  <div>
-    <v-dialog
-      v-model="verEventoDialog"
-      width="600"
-      :persistent="loading"
-      @click:outside="!loading ? salvaEdicaoEvento() : 1"
-    >
-      <v-card :loading="loading">
-        <v-card-title>
-          {{ nomeEventoTxt === '' ? 'Novo Evento' : nomeEventoTxt }}
-          <v-menu
-            v-model="menu"
-            :close-on-content-click="false"
-            :nudge-width="200"
-            offset-x
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                :color="colorPicker.hex == undefined ? noColor : colorPicker.hex"
-                size="25"
-                v-bind="attrs"
-                v-on="on"
-              >
-                fiber_manual_record
-              </v-icon>
-            </template>
-            <v-card>
-              <v-color-picker
-                v-model="colorPicker"
-                dot-size="25"
-                hide-inputs
-                hide-mode-switch
-                swatches-max-height="164"
-              ></v-color-picker>
-            </v-card>
-          </v-menu>
-          <v-btn
-            icon
-            text
-            class="iconRight"
-            @click="deletarEvento(eventoSelecionado)"
-          >
-            <v-icon size="26">
-              delete
-            </v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-card-subtitle>
-          {{ dataEventoEntTxt === '' ? 'Insira a data do evento' : dataEventoEntTxt }}
-        </v-card-subtitle>
-        <v-divider></v-divider>
-        <v-container>
-          <v-row style="padding: 0 25px; margin-top: 5px">
-            <v-text-field
-              :color="iconeColor"
-              v-model="nomeEventoTxt"
-              label="Nome do evento"
-              :append-icon="iconeTp"
-              @keyup="editaEvento"
+    <div>
+      <v-dialog
+        v-model="verEventoDialog"
+        width="600"
+        :persistent="loading"
+        @click:outside="!loading ? salvaEdicaoEvento() : 1"
+      >
+        <v-card :loading="loading">
+          <v-card-title>
+            {{ nomeEventoTxt === "" ? "Novo Evento" : nomeEventoTxt }}
+            <v-menu
+              v-model="menu"
+              :close-on-content-click="false"
+              :nudge-width="200"
+              offset-x
             >
-            </v-text-field>
-          </v-row>
-          <v-row style="padding: 0 15px">
-            <v-col>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon
+                  :color="
+                    colorPicker.hex == undefined ? noColor : colorPicker.hex
+                  "
+                  size="25"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  fiber_manual_record
+                </v-icon>
+              </template>
+              <v-card>
+                <v-color-picker
+                  v-model="colorPicker"
+                  dot-size="25"
+                  hide-inputs
+                  hide-mode-switch
+                  swatches-max-height="164"
+                ></v-color-picker>
+              </v-card>
+            </v-menu>
+            <v-btn icon text class="iconRight heart">
+              <v-icon size="26"
+               @click="mudaIcon"> 
+                {{ favIcon }}
+              </v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              text
+              class="iconRight"
+              @click="deletarEvento(eventoSelecionado)"
+            >
+              <v-icon size="26"> delete </v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-subtitle>
+            {{
+              dataEventoEntTxt === ""
+                ? "Insira a data do evento"
+                : dataEventoEntTxt
+            }}
+          </v-card-subtitle>
+          <v-divider></v-divider>
+          <v-container>
+            <v-row style="padding: 0 25px; margin-top: 5px">
               <v-text-field
                 :color="iconeColor"
-                v-model="dataEventoEntTxt"
-                label="Hora inicio evento"
-                v-mask="['####-##-## ##:##']"
+                v-model="nomeEventoTxt"
+                label="Nome do evento"
                 :append-icon="iconeTp"
                 @keyup="editaEvento"
               >
               </v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                :color="iconeColor"
-                v-model="dataEventoSaidaTxt"
-                label="Hora final evento"
-                v-mask="['####-##-## ##:##']"
-                :append-icon="iconeTp"
-                @keyup="editaEvento"
-              >
-              </v-text-field>
-            </v-col>
-          </v-row>
-          <v-row style="padding: 0 15px">
-            <v-col>
-              <v-select
-                v-model="formCliente"
-                label="Cliente"
-                :color="iconeColor"
-                :append-icon="iconeTp"
-                :items="cliente"
-                @change="veiculoCliente(formCliente)"
-                @keyup="editaEvento"
-              >
-              </v-select>
-            </v-col>
-            <v-col>
-              <v-select
-                v-model="formCarro"
-                label="Carro"
-                :color="iconeColor"
-                :append-icon="iconeTp"
-                :items="carro"
-                @keyup="editaEvento"
-              >
-              </v-select>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-card>
-    </v-dialog>
-    <v-sheet title height="54" class="d-flex">
-      <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
-        <v-icon>mdi-chevron-left</v-icon>
-      </v-btn>
-      <v-btn outlined class="ma-2" color="white" @click="setToday">
-        Hoje
-      </v-btn>
-      <v-btn
-       outlined 
-       class="ma-2" 
-       color="white" 
-       @click="type === 'month' ? (type = 'day') : (type = 'month')"
-       >
-        {{ type !== 'month' ? 'Dia' : 'Mes' }}
-      </v-btn>
-      <v-spacer></v-spacer>
-      <v-toolbar-title style="margin-top: 12px" v-if="$refs.calendar">
-        {{ $refs.calendar.title }}
-      </v-toolbar-title>
-      <v-btn icon class="ma-2" @click="$refs.calendar.next()">
-        <v-icon>mdi-chevron-right</v-icon>
-      </v-btn>
-    </v-sheet>
-    <v-sheet height="775">
-      <v-calendar
-        ref="calendar"
-        v-model="focus"
-        :weekdays="weekday"
-        :first-interval="1"
-        :interval-count="24"
-        :type="type"
-        :events="events"
-        :event-overlap-mode="mode"
-        :event-overlap-threshold="60"
-        @click:date="type === 'day' ? agendarEvento($event) : viewDay($event)"
-        @click:event="verEvento"
-      ></v-calendar>
-    </v-sheet>
-  </div>
+            </v-row>
+            <v-row style="padding: 0 15px">
+              <v-col>
+                <v-text-field
+                  :color="iconeColor"
+                  v-model="dataEventoEntTxt"
+                  label="Hora inicio evento"
+                  v-mask="['####-##-## ##:##']"
+                  :append-icon="iconeTp"
+                  @keyup="editaEvento"
+                >
+                </v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  :color="iconeColor"
+                  v-model="dataEventoSaidaTxt"
+                  label="Hora final evento"
+                  v-mask="['####-##-## ##:##']"
+                  :append-icon="iconeTp"
+                  @keyup="editaEvento"
+                >
+                </v-text-field>
+              </v-col>
+            </v-row>
+            <v-row style="padding: 0 15px">
+              <v-col>
+                <v-select
+                  v-model="formCliente"
+                  label="Cliente"
+                  :color="iconeColor"
+                  :append-icon="iconeTp"
+                  :items="cliente"
+                  @change="veiculoCliente(formCliente)"
+                  @keyup="editaEvento"
+                >
+                </v-select>
+              </v-col>
+              <v-col>
+                <v-select
+                  v-model="formCarro"
+                  label="Carro"
+                  :color="iconeColor"
+                  :append-icon="iconeTp"
+                  :items="carro"
+                  @keyup="editaEvento"
+                >
+                </v-select>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
+      </v-dialog>
+      <v-sheet title height="54" class="d-flex">
+        <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
+        <v-btn outlined class="ma-2" color="white" @click="setToday">
+          Hoje
+        </v-btn>
+        <v-btn
+          outlined
+          class="ma-2"
+          color="white"
+          @click="type === 'month' ? (type = 'day') : (type = 'month')"
+        >
+          {{ type !== "month" ? "Dia" : "Mes" }}
+        </v-btn>
+        <v-btn outlined class="ma-2" color="white"> Favoritos </v-btn>
+        <v-spacer></v-spacer>
+        <v-toolbar-title style="margin-top: 12px" v-if="$refs.calendar">
+          {{ $refs.calendar.title }}
+        </v-toolbar-title>
+        <v-btn icon class="ma-2" @click="$refs.calendar.next()">
+          <v-icon>mdi-chevron-right</v-icon>
+        </v-btn>
+      </v-sheet>
+      <v-sheet height="775">
+        <v-calendar
+          ref="calendar"
+          v-model="focus"
+          :weekdays="weekday"
+          :first-interval="1"
+          :interval-count="24"
+          :type="type"
+          :events="events"
+          :event-overlap-mode="mode"
+          :event-overlap-threshold="60"
+          @click:date="type === 'day' ? agendarEvento($event) : viewDay($event)"
+          @click:event="verEvento"
+        ></v-calendar>
+      </v-sheet>
+    </div>
   </div>
 </template>
 
@@ -195,6 +205,7 @@ export default {
     menu: false,
     noColor: "#FF0000",
     keyDialog: 0,
+    favIcon: "favorite_border"
   }),
   beforeMount() {
     this.getEvents();
@@ -204,7 +215,7 @@ export default {
     getDB() {
       indexDb.getDataBase("clientes").then((clientes) => {
         this.itemsClient = clientes;
-        return this.itemsClient
+        return this.itemsClient;
       });
     },
     getEvents() {
@@ -217,6 +228,7 @@ export default {
         cliente: "Raggi Izar Neto",
         carro: "Celta",
         id: Math.floor(Math.random() * 10000000000),
+        fav: false,
       });
     },
     viewDay({ date }) {
@@ -241,6 +253,7 @@ export default {
       this.formCarro = e.event.carro;
       this.formCliente = e.event.cliente;
       this.veiculoCliente(this.formCliente);
+      this.favIcon = e.event.fav ? "favorite" : "favorite_border";
     },
     editaEvento(e) {
       this.iconeColor = "#7d7d7d";
@@ -269,17 +282,20 @@ export default {
         cliente: this.formCliente,
         carro: this.formCarro,
         id: Math.floor(Math.random() * 10000000000),
+        fav: 0,
       };
       if (eventos.name !== "" && eventos.start !== "" && eventos.end !== "") {
         if (index === -1) {
-        this.events.push(eventos)
+          this.events.push(eventos);
         } else {
-          this.events.splice(index, 1, eventos);  
-        }   
-      }   
+          this.events.splice(index, 1, eventos);
+        }
+      }
     },
     veiculoCliente(nomeCliente) {
-      let clienteSelecionado = this.itemsClient.findIndex(f => f.nome === nomeCliente);
+      let clienteSelecionado = this.itemsClient.findIndex(
+        (f) => f.nome === nomeCliente
+      );
       // this.formCarro = this.itemsClient[clienteSelecionado].carro[0]
       this.carro = [];
       if (this.itemsClient[clienteSelecionado] !== undefined) {
@@ -288,9 +304,9 @@ export default {
         });
       }
     },
-    
+
     // marcar Evento
-    
+
     agendarEvento(e) {
       this.iconeColor = "#7d7d7d";
       this.iconeTp = "";
@@ -305,15 +321,20 @@ export default {
       this.formCarro = "";
       this.formCliente = "";
 
-      this.verEventoDialog = true
-      
+      this.verEventoDialog = true;
     },
-    
+    mudaIcon() {
+      this.eventoSelecionado.fav ?
+        this.eventoSelecionado.fav = false :
+        this.eventoSelecionado.fav = true
+      
+      this.favIcon = this.eventoSelecionado.fav ? "favorite" : "favorite_border";
+    },
     deletarEvento(e) {
-      let Index = this.events.findIndex(f => f.name === e.name)
-      this.events.splice(Index, 1)
-      this.verEventoDialog = false
-    }
+      let Index = this.events.findIndex((f) => f.name === e.name);
+      this.events.splice(Index, 1);
+      this.verEventoDialog = false;
+    },
   },
 };
 </script>
@@ -337,30 +358,31 @@ export default {
   border-left: #404040 1px solid !important;
 }
 .theme--dark.v-calendar-daily .v-calendar-daily__day-interval {
-    border-top: #4a4a4a 1px solid !important;
+  border-top: #4a4a4a 1px solid !important;
 }
 .theme--dark.v-calendar-daily .v-calendar-daily_head-day {
-    border-right: #4a4a4a 1px solid !important;
-    border-bottom: #4a4a4a 1px solid !important;
-    color: #FFFFFF;
+  border-right: #4a4a4a 1px solid !important;
+  border-bottom: #4a4a4a 1px solid !important;
+  color: #ffffff;
 }
 .theme--dark.v-calendar-daily {
-    background-color: #303030;
-    border-left: #4a4a4a 1px solid !important;
-    border-top: #4a4a4a 1px solid !important;
+  background-color: #303030;
+  border-left: #4a4a4a 1px solid !important;
+  border-top: #4a4a4a 1px solid !important;
 }
 .theme--dark.v-calendar-daily .v-calendar-daily__day {
-    border-right: none !important; 
-    border-bottom: none !important; 
+  border-right: none !important;
+  border-bottom: none !important;
 }
 .theme--dark.v-calendar-events .v-event-timed {
-    border: 0px solid !important;
+  border: 0px solid !important;
 }
-.iconRight{
+.iconRight {
   position: absolute;
   right: 20px;
   top: 24px;
 }
-
+.heart {
+  right: 55px !important;
+}
 </style>
-/* eslint-disable */

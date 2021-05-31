@@ -24,8 +24,8 @@ db.collection("clientes")
         carro: "Sandero",
         clientsName: "Raggi",
         placa: "abc123",
-        ano: 2016
-      })
+        ano: 2016,
+      });
     }
   });
 
@@ -37,11 +37,14 @@ export default {
     return db.collection(nomeDoDB).get();
   },
   deleteDataBase(nomeDoDB, id) {
-    return db.collection(nomeDoDB).doc({ id: id }).delete()
+    return db.collection(nomeDoDB).doc({ id: id }).delete();
   },
   adicionaCarroCliente(id, carro) {
-    return db.collection('clientes').doc({ id: id }).update({
-      carro: [carro]
-    })
-  }
+    return db
+      .collection("clientes")
+      .doc({ id: id })
+      .update({
+        carro: [carro],
+      });
+  },
 };
