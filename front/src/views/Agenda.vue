@@ -38,10 +38,14 @@
                 ></v-color-picker>
               </v-card>
             </v-menu>
-            <v-btn icon text class="iconRight heart">
-              <v-icon size="26"
-               @click="mudaIcon"> 
-                {{ favIcon }}
+            <v-btn
+             icon 
+             text 
+             class="iconRight heart" 
+             :style="{ display: criando ? 'none' : '' }"
+            >
+              <v-icon size="26" @click="mudaIcon">
+                {{ favIcon ? "favorite" : "favorite_border" }}
               </v-icon>
             </v-btn>
             <v-btn
@@ -139,7 +143,13 @@
         >
           {{ type !== "month" ? "Mes" : "Dia" }}
         </v-btn>
-        <v-btn outlined class="ma-2" color="white"> Favoritos </v-btn>
+        <v-btn 
+         outlined
+         class="ma-2" 
+         color="white"
+         @click="filtrando ? filtrando = false : filtrando = true"
+         > Favoritos 
+        </v-btn>
         <v-spacer></v-spacer>
         <v-toolbar-title style="margin-top: 12px" v-if="$refs.calendar">
           {{ $refs.calendar.title }}
@@ -156,7 +166,7 @@
           :first-interval="1"
           :interval-count="24"
           :type="type"
-          :events="events"
+          :events="filtrando ? favoritos : events"
           :event-overlap-mode="mode"
           :event-overlap-threshold="60"
           @click:date="type === 'day' ? agendarEvento($event) : viewDay($event)"
@@ -205,7 +215,10 @@ export default {
     menu: false,
     noColor: "#FF0000",
     keyDialog: 0,
-    favIcon: "favorite_border"
+    favoritos: [],
+    favIcon: false,
+    filtrando: false,
+    criando: false,
   }),
   beforeMount() {
     this.getEvents();
@@ -219,6 +232,7 @@ export default {
       });
     },
     getEvents() {
+      let idGen = Math.floor(Math.random() * 10000000000)
       this.events.push({
         name: "Raggi",
         start: moment().format("YYYY-MM-DD HH:MM"),
@@ -227,8 +241,7 @@ export default {
         timed: 1,
         cliente: "Raggi Izar Neto",
         carro: "Celta",
-        id: Math.floor(Math.random() * 10000000000),
-        fav: false,
+        id: idGen,
       });
     },
     viewDay({ date }) {
@@ -239,6 +252,9 @@ export default {
       this.focus = "";
     },
     verEvento(e) {
+      this.verificaFavorito(e.event)
+
+      this.criando = false
       this.iconeColor = "#7d7d7d";
       this.iconeTp = "";
       this.colorPicker.hex = e.event.color;
@@ -253,7 +269,6 @@ export default {
       this.formCarro = e.event.carro;
       this.formCliente = e.event.cliente;
       this.veiculoCliente(this.formCliente);
-      this.favIcon = e.event.fav ? "favorite" : "favorite_border";
     },
     editaEvento(e) {
       this.iconeColor = "#7d7d7d";
@@ -270,6 +285,7 @@ export default {
       }
     },
     salvaEdicaoEvento() {
+      let idGen = Math.floor(Math.random() * 10000000000)
       let index = this.events.findIndex(
         (f) => f.id === this.eventoSelecionado.id
       );
@@ -281,8 +297,7 @@ export default {
         timed: 1,
         cliente: this.formCliente,
         carro: this.formCarro,
-        id: Math.floor(Math.random() * 10000000000),
-        fav: 0,
+        id: this.eventoSelecionado.id !== '' ? this.eventoSelecionado.id : idGen,
       };
       if (eventos.name !== "" && eventos.start !== "" && eventos.end !== "") {
         if (index === -1) {
@@ -320,16 +335,30 @@ export default {
       });
       this.formCarro = "";
       this.formCliente = "";
-
+      this.favIcon = false
+      this.criando = true
       this.verEventoDialog = true;
     },
     mudaIcon() {
-      this.eventoSelecionado.fav ?
-        this.eventoSelecionado.fav = false :
-        this.eventoSelecionado.fav = true
-      
-      this.favIcon = this.eventoSelecionado.fav ? "favorite" : "favorite_border";
+      if (this.eventoSelecionado !== "") {
+        if (!this.favIcon) {
+          this.favoritos.push(this.eventoSelecionado);
+          this.favIcon = true;
+        } else {
+          let index =  this.favoritos.findIndex(f => f.id === this.eventoSelecionado.id)
+          this.favoritos.splice(index, 1)
+          this.favIcon = false;
+        }
+      }
     },
+    verificaFavorito(event) {
+      let index = this.favoritos.findIndex(f => f.id === event.id)
+      if (index != -1) {
+        this.favIcon = true
+      } else {
+        this.favIcon = false
+      }
+    },    
     deletarEvento(e) {
       let Index = this.events.findIndex((f) => f.name === e.name);
       this.events.splice(Index, 1);

@@ -22,6 +22,7 @@
             >
               <v-text-field
                 v-model="name"
+                maxlength="20"
                 label="Nome"
                 required
                 @keyup="validate"
@@ -54,6 +55,7 @@
               <v-text-field
                 v-model="cpf"
                 label="CPF"
+                maxlength="20"
                 v-mask="['###.###.###-##']"
                 required
                 @keyup="validate"
@@ -134,7 +136,7 @@
             >
               <v-text-field
                 v-model="name"
-                maxlength="5"
+                maxlength="20"
                 label="Nome"
                 required
                 @keyup="validate"
@@ -142,6 +144,7 @@
 
               <v-text-field
                 v-model="dtNasc"
+                maxlength="20"
                 label="Código Fornecedor"
                 required
                 @keyup="validate"
@@ -149,6 +152,7 @@
 
               <v-text-field
                 v-model="cnpj"
+                maxlength="20"
                 v-mask="['##.###.###/####-##']"
                 label="CNPJ"
                 required
@@ -228,12 +232,15 @@
               <v-text-field
                 v-model="carro"
                 label="Nome do modelo"
+                maxlength="20"
                 required
                 @keyup="validate"
               ></v-text-field>
+
               <v-text-field
                 v-model="placa"
                 label="Placa"
+                maxlength="20"
                 required
                 @keyup="validate"
               ></v-text-field>
@@ -241,6 +248,7 @@
               <v-text-field
                 v-model="ano"
                 label="Ano"
+                maxlength="20"
                 required
                 @keyup="validate"
               ></v-text-field>
@@ -309,6 +317,7 @@
               <v-text-field
                 v-model="name"
                 label="Nome"
+                maxlength="20"
                 required
                 @keyup="validate"
               ></v-text-field>
@@ -316,6 +325,7 @@
               <v-text-field
                 v-model="carro"
                 label="Veiculo"
+                maxlength="20"
                 required
                 @keyup="validate"
               ></v-text-field>
@@ -323,6 +333,8 @@
               <v-text-field
                 v-model="codPeca"
                 label="Código Peça"
+                maxlength="6"
+                v-mask="'########'"
                 required
                 @keyup="validate"
               ></v-text-field>
