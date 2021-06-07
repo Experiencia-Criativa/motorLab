@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 18-Maio-2021 às 15:01
+-- Tempo de geração: 07-Jun-2021 às 05:07
 -- Versão do servidor: 10.4.14-MariaDB
 -- versão do PHP: 7.4.10
 
@@ -30,23 +30,12 @@ USE `motorlab`;
 --
 
 CREATE TABLE `clientes` (
-  `clientes_id` int(10) NOT NULL,
-  `cpf` varchar(11) NOT NULL,
-  `nome` varchar(60) NOT NULL,
-  `email` varchar(60) NOT NULL,
-  `dt_nascimento` int(8) NOT NULL,
-  `dt_incis` datetime NOT NULL
+  `id` int(11) NOT NULL,
+  `nome` varchar(40) NOT NULL,
+  `cpf` varchar(20) NOT NULL,
+  `dtNascimento` varchar(20) NOT NULL,
+  `email` varchar(40) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Extraindo dados da tabela `clientes`
---
-
-INSERT INTO `clientes` (`clientes_id`, `cpf`, `nome`, `email`, `dt_nascimento`, `dt_incis`) VALUES
-(1, '50669793876', 'fernando risso', 'fernando.risso@pucpr.com.br', 20000822, '2021-05-17 22:34:43'),
-(2, '', 'inception', '', 0, '0000-00-00 00:00:00'),
-(3, '', 'good movie', '', 0, '0000-00-00 00:00:00'),
-(4, '', 'oiiiii', '', 0, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -55,37 +44,40 @@ INSERT INTO `clientes` (`clientes_id`, `cpf`, `nome`, `email`, `dt_nascimento`, 
 --
 
 CREATE TABLE `eventos` (
-  `eventos_id` int(10) NOT NULL,
-  `nome` varchar(60) NOT NULL,
-  `dt_inicio` int(12) NOT NULL,
-  `dt_fim` int(12) NOT NULL,
-  `dt_inciss` datetime NOT NULL
+  `id` int(11) NOT NULL,
+  `nome` varchar(40) NOT NULL,
+  `cliente_id` int(11) NOT NULL,
+  `veiculo_id` int(11) NOT NULL,
+  `funcionario_id` int(11) NOT NULL,
+  `servico_id` int(11) NOT NULL,
+  `favorito` smallint(3) NOT NULL,
+  `cor` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `fornecedores`
+-- Estrutura da tabela `funcionarios`
 --
 
-CREATE TABLE `fornecedores` (
-  `fornecedores_id` int(10) NOT NULL,
-  `cnpj` int(14) NOT NULL,
-  `nome_inst` varchar(60) NOT NULL,
-  `dt_incis` datetime NOT NULL
+CREATE TABLE `funcionarios` (
+  `id` int(11) NOT NULL,
+  `nome` varchar(50) NOT NULL,
+  `cpf` varchar(30) NOT NULL,
+  `dtNascimento` varchar(20) NOT NULL,
+  `cargo` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `pecas`
+-- Estrutura da tabela `servicos`
 --
 
-CREATE TABLE `pecas` (
-  `pecas_id` int(10) NOT NULL,
-  `nome_peca` varchar(60) NOT NULL,
-  `cnpj` int(14) NOT NULL,
-  `dt_incis` datetime NOT NULL
+CREATE TABLE `servicos` (
+  `id` int(11) NOT NULL,
+  `nome` varchar(40) NOT NULL,
+  `valorPH` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -95,11 +87,12 @@ CREATE TABLE `pecas` (
 --
 
 CREATE TABLE `veiculos` (
-  `veiculo_id` int(10) NOT NULL,
-  `cpf` int(11) NOT NULL,
-  `modelo` varchar(60) NOT NULL,
-  `ano` int(4) NOT NULL,
-  `dt_incis` datetime NOT NULL
+  `id` int(11) NOT NULL,
+  `modelo` varchar(40) NOT NULL,
+  `ano` varchar(20) NOT NULL,
+  `placa` varchar(20) NOT NULL,
+  `chassi` varchar(40) NOT NULL,
+  `cor` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -110,31 +103,35 @@ CREATE TABLE `veiculos` (
 -- Índices para tabela `clientes`
 --
 ALTER TABLE `clientes`
-  ADD PRIMARY KEY (`clientes_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Índices para tabela `eventos`
 --
 ALTER TABLE `eventos`
-  ADD PRIMARY KEY (`eventos_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cliente_id` (`cliente_id`),
+  ADD KEY `funcionario_id` (`funcionario_id`),
+  ADD KEY `servico_id` (`servico_id`),
+  ADD KEY `veiculo_id` (`veiculo_id`);
 
 --
--- Índices para tabela `fornecedores`
+-- Índices para tabela `funcionarios`
 --
-ALTER TABLE `fornecedores`
-  ADD PRIMARY KEY (`fornecedores_id`);
+ALTER TABLE `funcionarios`
+  ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `pecas`
+-- Índices para tabela `servicos`
 --
-ALTER TABLE `pecas`
-  ADD PRIMARY KEY (`pecas_id`);
+ALTER TABLE `servicos`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Índices para tabela `veiculos`
 --
 ALTER TABLE `veiculos`
-  ADD PRIMARY KEY (`veiculo_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT de tabelas despejadas
@@ -144,29 +141,38 @@ ALTER TABLE `veiculos`
 -- AUTO_INCREMENT de tabela `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `clientes_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `eventos`
 --
 ALTER TABLE `eventos`
-  MODIFY `eventos_id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `fornecedores`
+-- AUTO_INCREMENT de tabela `funcionarios`
 --
-ALTER TABLE `fornecedores`
-  MODIFY `fornecedores_id` int(10) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `funcionarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `veiculos`
+--
+ALTER TABLE `veiculos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restrições para despejos de tabelas
 --
 
 --
--- Limitadores para a tabela `veiculos`
+-- Limitadores para a tabela `eventos`
 --
-ALTER TABLE `veiculos`
-  ADD CONSTRAINT `carros_ibfk_1` FOREIGN KEY (`veiculo_id`) REFERENCES `clientes` (`clientes_id`);
+ALTER TABLE `eventos`
+  ADD CONSTRAINT `eventos_ibfk_1` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`id`),
+  ADD CONSTRAINT `eventos_ibfk_2` FOREIGN KEY (`funcionario_id`) REFERENCES `funcionarios` (`id`),
+  ADD CONSTRAINT `eventos_ibfk_3` FOREIGN KEY (`servico_id`) REFERENCES `servicos` (`id`),
+  ADD CONSTRAINT `eventos_ibfk_4` FOREIGN KEY (`veiculo_id`) REFERENCES `veiculos` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
