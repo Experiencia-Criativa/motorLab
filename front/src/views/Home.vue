@@ -61,6 +61,15 @@
                 @keyup="validate"
               ></v-text-field>
 
+              <v-text-field
+                v-model="email"
+                label="Email"
+                maxlength="40"
+                required
+                :rules="[rules.required, rules.email]"
+                @keyup="validate"
+              ></v-text-field>
+
               <v-btn
                 :disabled="valid"
                 color="success"
@@ -91,8 +100,10 @@
                 ></v-divider>
 
                 <v-list-item v-else :key="item.nomeCliente">
-                  <v-list-item-avatar>
-                    <v-img :src="item.avatar"></v-img>
+                  <v-list-item-avatar color="#741b48">
+                    <span style="color: white">
+                      {{ item.nomeCliente.substring(0, 2).toUpperCase() }}
+                    </span>
                   </v-list-item-avatar>
 
                   <v-list-item-content>
@@ -121,7 +132,7 @@
       <v-dialog v-model="dialogForne" width="600">
         <v-card>
           <v-card-title>
-            Fornecedores
+            Funcionários
             <v-btn color="#ededed" icon text @click="openForm">
               <v-icon> add </v-icon>
             </v-btn>
@@ -142,19 +153,43 @@
                 @keyup="validate"
               ></v-text-field>
 
+              <v-menu
+                v-model="menu2"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="dtNasc"
+                    label="Dt. Nascimento"
+                    append-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="dtNasc"
+                  @input="menu2 = false"
+                ></v-date-picker>
+              </v-menu>
+
               <v-text-field
-                v-model="dtNasc"
+                v-model="cpf"
+                label="CPF"
                 maxlength="20"
-                label="Código Fornecedor"
+                v-mask="['###.###.###-##']"
                 required
                 @keyup="validate"
               ></v-text-field>
 
               <v-text-field
-                v-model="cnpj"
+                v-model="cargo"
+                label="Cargo"
                 maxlength="20"
-                v-mask="['##.###.###/####-##']"
-                label="CNPJ"
                 required
                 @keyup="validate"
               ></v-text-field>
@@ -174,21 +209,23 @@
           </v-container>
           <v-card max-width="100%" class="mx-auto">
             <v-list three-line>
-              <template v-for="(item, index) in itemsForne">
+              <template v-for="(item, index) in itemsFunc">
                 <v-divider
                   v-if="item.divider"
                   :key="index"
                   :inset="item.inset"
                 ></v-divider>
 
-                <v-list-item v-else :key="item.nomeForne">
-                  <v-list-item-avatar>
-                    <v-img :src="item.avatar"></v-img>
+                <v-list-item v-else :key="item.nomeFunc">
+                  <v-list-item-avatar color="#741b48">
+                    <span style="color: white">
+                      {{ item.nomeFunc.substring(0, 2).toUpperCase() }}
+                    </span>
                   </v-list-item-avatar>
 
                   <v-list-item-content>
                     <v-list-item-title
-                      v-html="item.nomeForne"
+                      v-html="item.nomeFunc"
                     ></v-list-item-title>
                     <v-list-item-subtitle
                       v-html="item.subtitle"
@@ -204,7 +241,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <!--===============FIM Dialog Fornecdor==================-->
+      <!--===============FIM Dialog Servicos==================-->
       <!--===============Dialog Veiculos=========================-->
       <v-dialog v-model="dialogCar" width="600">
         <v-card>
@@ -222,15 +259,8 @@
               lazy-validation
               style="padding: 20px"
             >
-              <v-select
-                v-model="clientsName"
-                :items="clienteSelecionado"
-                label="Selecione o nome do cliente"
-                required
-                @blur="validate"
-              />
               <v-text-field
-                v-model="carro"
+                v-model="modelo"
                 label="Nome do modelo"
                 maxlength="20"
                 required
@@ -240,18 +270,58 @@
               <v-text-field
                 v-model="placa"
                 label="Placa"
-                maxlength="20"
+                v-mask="['AAA-####']"
+                required
+                @keyup="validate"
+              ></v-text-field>
+
+              <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                :return-value.sync="ano"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="ano"
+                    label="Ano"
+                    append-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker v-model="ano" type="month" no-title scrollable>
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="menu = false">
+                    Cancelar
+                  </v-btn>
+                  <v-btn text color="primary" @click="$refs.menu.save(ano)">
+                    OK
+                  </v-btn>
+                </v-date-picker>
+              </v-menu>
+
+              <v-text-field
+                v-model="chassi"
+                label="Chassi"
+                maxlength="17"
                 required
                 @keyup="validate"
               ></v-text-field>
 
               <v-text-field
-                v-model="ano"
-                label="Ano"
+                v-model="corVeiculo"
+                label="Cor"
                 maxlength="20"
                 required
                 @keyup="validate"
               ></v-text-field>
+
               <v-btn
                 :disabled="valid"
                 color="success"
@@ -274,8 +344,10 @@
                 ></v-divider>
 
                 <v-list-item v-else :key="item.nomeCarro">
-                  <v-list-item-avatar>
-                    <v-img :src="item.avatar"></v-img>
+                  <v-list-item-avatar color="#741b48">
+                    <span style="color: white">
+                      {{ item.nomeCarro.substring(0, 2).toUpperCase() }}
+                    </span>
                   </v-list-item-avatar>
 
                   <v-list-item-content>
@@ -297,11 +369,11 @@
         </v-card>
       </v-dialog>
       <!--===============FIM Dialog Veiculos=========================-->
-      <!--===============Dialog Peças==============================-->
+      <!--===============Dialog Serviços==============================-->
       <v-dialog v-model="dialogParts" width="600">
         <v-card>
           <v-card-title>
-            Peças
+            Serviços
             <v-btn color="#ededed" icon @click="openForm">
               <v-icon> add </v-icon>
             </v-btn>
@@ -315,7 +387,7 @@
               style="padding: 20px"
             >
               <v-text-field
-                v-model="name"
+                v-model="servico"
                 label="Nome"
                 maxlength="20"
                 required
@@ -323,18 +395,9 @@
               ></v-text-field>
 
               <v-text-field
-                v-model="carro"
+                v-model="valorPH"
                 label="Veiculo"
                 maxlength="20"
-                required
-                @keyup="validate"
-              ></v-text-field>
-
-              <v-text-field
-                v-model="codPeca"
-                label="Código Peça"
-                maxlength="6"
-                v-mask="'########'"
                 required
                 @keyup="validate"
               ></v-text-field>
@@ -354,21 +417,23 @@
           </v-container>
           <v-card max-width="100%" class="mx-auto">
             <v-list three-line>
-              <template v-for="(item, index) in itemsPecas">
+              <template v-for="(item, index) in itemsServico">
                 <v-divider
                   v-if="item.divider"
                   :key="index"
                   :inset="item.inset"
                 ></v-divider>
 
-                <v-list-item v-else :key="item.nomePeca">
-                  <v-list-item-avatar>
-                    <v-img :src="item.avatar"></v-img>
+                <v-list-item v-else :key="item.nomeServico">
+                  <v-list-item-avatar color="#741b48">
+                    <span style="color: white">
+                      {{ item.nomeServico.substring(0, 2).toUpperCase() }}
+                    </span>
                   </v-list-item-avatar>
 
                   <v-list-item-content>
                     <v-list-item-title
-                      v-html="item.nomePeca"
+                      v-html="item.nomeServico"
                     ></v-list-item-title>
                     <v-list-item-subtitle
                       v-html="item.subtitle"
@@ -383,7 +448,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <!--===============FIM Dialog Peças==============================-->
+      <!--===============FIM Dialog Serviços==============================-->
       <v-container>
         <v-row>
           <v-col cols="12">
@@ -400,7 +465,7 @@
         </v-row>
         <v-row>
           <v-col cols="6">
-            <v-card color="#333" dark style="border-radius: 333">
+            <v-card color="#333" dark style="border-radius: 333" height="200px">
               <v-card-title class="text-h5"> Clientes </v-card-title>
 
               <v-card-subtitle
@@ -414,7 +479,7 @@
             </v-card>
           </v-col>
           <v-col cols="6">
-            <v-card color="#333" dark style="border-radius: 333">
+            <v-card color="#333" dark style="border-radius: 333" height="200px">
               <v-card-title class="text-h5"> Veiculos </v-card-title>
 
               <v-card-subtitle
@@ -429,27 +494,9 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12">
-            <v-card color="#333" dark style="border-radius: 333">
-              <v-card-title class="text-h5">
-                Utilização nos ultimos dias
-              </v-card-title>
-              <v-sparkline
-                :fill="fill"
-                :gradient="selectedGradient"
-                :line-width="width"
-                padding="10"
-                smooth="20"
-                :value="value"
-                auto-draw
-              ></v-sparkline>
-            </v-card>
-          </v-col>
-        </v-row>
-        <v-row>
           <v-col cols="6">
-            <v-card color="#333" dark style="border-radius: 333">
-              <v-card-title class="text-h5"> Fornecedores </v-card-title>
+            <v-card color="#333" dark style="border-radius: 333" height="200px">
+              <v-card-title class="text-h5"> Funcionários </v-card-title>
 
               <v-card-subtitle
                 >Faça todo o cadastro e manutenção do seus
@@ -462,14 +509,11 @@
             </v-card>
           </v-col>
           <v-col cols="6">
-            <v-card color="#333" dark style="border-radius: 333">
-              <v-card-title class="text-h5"> Peças </v-card-title>
-
+            <v-card color="#333" dark style="border-radius: 333" height="200px">
+              <v-card-title class="text-h5"> Serviços </v-card-title>
               <v-card-subtitle
-                >Faça todo o cadastro e manutenção do seus
-                clientes</v-card-subtitle
+                >Faça todo o cadastro de seus serviços</v-card-subtitle
               >
-
               <v-card-actions>
                 <v-btn text @click="sideBarButtons(3)"> Clique aqui </v-btn>
               </v-card-actions>
@@ -504,26 +548,40 @@ export default {
     dialogParts: false,
 
     itemsClient: [],
-    itemsForne: [],
+    itemsFunc: [],
     itemsCarros: [],
-    itemsPecas: [],
+    itemsServico: [],
     valid: false,
     menu2: false,
+    menu: false,
+
+    rules: {
+      required: (value) => !!value || "Required.",
+      counter: (value) => value.length <= 20 || "Max 20 characters",
+      email: (value) => {
+        const pattern =
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return pattern.test(value) || "Invalid e-mail.";
+      },
+    },
 
     //form cliente
     name: "",
     cpf: "",
     dtNasc: "",
-    //form Fornecedor
+    email: "",
+    //form funcio
     cnpj: "",
+    cargo: "",
     //form Veiculo
-    carro: "",
+    modelo: "",
     placa: "",
     ano: "",
-    clientsName: "",
-    clienteSelecionado: [],
-    //form Peca
-    codPeca: "",
+    chassi: "",
+    corVeiculo: "",
+    //form Serviço
+    servico: "",
+    valorPH: "",
     // fim forms
 
     ableForm: false,
@@ -532,29 +590,23 @@ export default {
     itemsClientDB: [],
     itemsCarroDB: [],
   }),
-  mounted() {
-    this.getDBs();
+  async mounted() {
+    try {
+      await axios
+        .get("http://localhost:3001/api/selectCliente")
+        .then((response) => (this.itemsClientDB = response.data));
+    } catch (err) {
+      console.log(err);
+    } finally {
+      this.mountListas();
+    }
   },
   methods: {
-    getDBs() {
-      indexDb.getDataBase("clientes").then((clientes) => {
-        this.itemsClientDB = clientes;
-        this.itemsClientDB.forEach((f) => {
-          this.itemsClient.push({
-            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-            nomeCliente: f.nome,
-            subtitle: `Dt. Nascimento: ${f.dtNascimento}, CPF: ${f.cpf}`,
-          });
-        });
-      });
-      indexDb.getDataBase("carros").then((carros) => {
-        this.itemsCarrosDB = carros;
-        this.itemsCarrosDB.forEach((f) => {
-          this.itemsCarros.push({
-            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-            nomeCarro: `${f.carro} / ${f.clientsName}`,
-            subtitle: `Ano: ${f.ano}, Placa: ${f.placa}`,
-          });
+    mountListas() {
+      this.itemsClientDB.forEach((f) => {
+        this.itemsClient.push({
+          nomeCliente: f.nome,
+          subtitle: `Dt. Nascimento: ${f.dtNascimento}, CPF: ${f.cpf}`,
         });
       });
     },
@@ -568,7 +620,6 @@ export default {
         case 1:
           this.dialogCar = true;
           this.ableForm = false;
-          this.selectClient();
           this.dialogSelecionado = item;
           break;
         case 2:
@@ -606,11 +657,12 @@ export default {
         this.carro !== "" &&
         this.ano !== "" &&
         this.placa !== "" &&
-        this.clientsName !== ""
+        this.chassi !== "" &&
+        this.cor !== ""
       ) {
         // Veiculo
         this.valid = false;
-      } else if (this.name !== "" && this.carro !== "" && this.codPeca !== "") {
+      } else if (this.servico !== "" && this.valorPH !== "") {
         // peca
         this.valid = false;
       } else {
@@ -620,30 +672,27 @@ export default {
     resetValidation() {
       this.name = "";
       this.cpf = "";
-      this.carro = "";
+      this.modelo = "";
       this.ano = "";
       this.dtNasc = "";
       this.placa = "";
       this.clientsName = "";
-      this.codPeca = "";
+      this.servico = "";
+      this.valorPH = "";
       this.cnpj = "";
+      this.cargo = "";
+      this.email = "";
+      this.chassi = "";
+      this.corVeiculo = "";
       this.valid = true;
       this.ableForm = false;
     },
     addArray(dialogSelecionado) {
-      let ult = this.itemsClientDB.length - 1;
-      let ultCarros = this.itemsCarrosDB.length - 1;
+      // let ult = this.itemsClientDB.length - 1;
+      // let ultCarros = this.itemsCarrosDB.length - 1;
       switch (dialogSelecionado) {
         case 0:
-          let DBobjClient = {
-            id: this.itemsClientDB[ult].id + 1,
-            nome: this.name,
-            dtNascimento: this.dtNasc,
-            cpf: this.cpf,
-            carro: [],
-          };
           this.itemsClient.push({
-            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
             nomeCliente: this.name,
             subtitle: `Dt. Nascimento: ${this.dtNasc}, CPF: ${this.cpf}`,
           });
@@ -654,26 +703,26 @@ export default {
               name: this.name,
               cpf: this.cpf,
               dtNasc: this.dtNasc,
+              email: this.email,
             })
             .then(function (response) {
               console.log(response);
             });
 
-          indexDb.newDataBase("clientes", DBobjClient);
-          this.itemsClientDB.push(DBobjClient);
+          // indexDb.newDataBase("clientes", DBobjClient);
+          // this.itemsClientDB.push(DBobjClient);
           this.resetValidation();
           break;
         case 1:
           let DBobjCarros = {
             id: this.itemsCarrosDB[ultCarros].id + 1,
-            carro: this.carro,
+            carro: this.modelo,
             clientsName: this.clientsName,
             placa: this.placa,
             ano: this.ano,
           };
 
           this.itemsCarros.push({
-            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
             nomeCarro: `${this.carro} / ${this.clientsName}`,
             subtitle: `Ano: ${this.ano}, Placa: ${this.placa}`,
           });
@@ -683,10 +732,12 @@ export default {
           );
 
           axios
-            .post("http://localhost:3001/api/insertCarros", {
-              placa: this.placa,
-              modelo: this.carro,
+            .post("http://localhost:3001/api/insertVeiculos", {
+              modelo: this.modelo,
               ano: this.ano,
+              placa: this.placa,
+              chassi: this.chassi,
+              cor: this.corVeiculo,
             })
             .then(function (response) {
               console.log(response);
@@ -700,27 +751,36 @@ export default {
 
           break;
         case 2:
-          this.itemsForne.push({
-            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-            nomeForne: this.name,
-            subtitle: `Dt. Nascimento: ${this.dtNasc}, CPF: ${this.cnpj}`,
-          });
+          axios
+            .post("http://localhost:3001/api/insertFunc", {
+              name: this.name,
+              cpf: this.cpf,
+              dtNasc: this.dtNasc,
+              cargo: this.cargo,
+            })
+            .then(
+              this.itemsFunc.push({
+                nomeFunc: this.name,
+                subtitle: `Dt. Nascimento: ${this.dtNasc}, CPF: ${this.cnpj}`,
+              })
+            );
           this.resetValidation();
           break;
         case 3:
-          this.itemsPecas.push({
-            avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-            nomePeca: this.name,
-            subtitle: `Veiculo: ${this.carro}, Cod: ${this.codPeca}`,
-          });
+          axios
+            .post("http://localhost:3001/api/insertServico", {
+              servico: this.servico,
+              valorPH: this.valorPH,
+            })
+            .then(
+              this.itemsServico.push({
+                nomeServico: this.servico,
+                subtitle: `Nome: ${this.servico}, Cod: ${this.valorPH}`,
+              })
+            );
           this.resetValidation();
           break;
       }
-    },
-    selectClient() {
-      this.itemsClient.forEach((elements) => {
-        this.clienteSelecionado.push(elements.nomeCliente);
-      });
     },
   },
 };
