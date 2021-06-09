@@ -128,6 +128,15 @@ app.post("/api/deleteFunc", (req, res) => {
   })
 })
 
+app.post("/api/deleteServ", (req, res) => {
+  const sql = "DELETE FROM `servicos` WHERE id = (?)"
+  const id = req.body.id
+  db.query(sql, [id],(err, result) => {
+    res.send(result)
+    console.log(err)
+  })
+})
+
 
 
 app.listen(3001, () => {

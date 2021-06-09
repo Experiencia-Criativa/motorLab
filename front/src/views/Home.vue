@@ -128,7 +128,7 @@
         </v-card>
       </v-dialog>
       <!--===============FIM Dialog Cliente==================-->
-      <!--===============Dialog Fornecedor===================-->
+      <!--===============Dialog Funcionario===================-->
       <v-dialog v-model="dialogForne" width="600">
         <v-card>
           <v-card-title>
@@ -231,6 +231,9 @@
                       v-html="item.subtitle"
                     ></v-list-item-subtitle>
                   </v-list-item-content>
+                  <v-btn color="#ededed" icon text @click="deleteFunc(index)">
+                    <v-icon> delete </v-icon>
+                  </v-btn>
                 </v-list-item>
               </template>
             </v-list>
@@ -442,6 +445,9 @@
                       v-html="item.subtitle"
                     ></v-list-item-subtitle>
                   </v-list-item-content>
+                  <v-btn color="#ededed" icon text @click="deleteServ(index)">
+                    <v-icon> delete </v-icon>
+                  </v-btn>
                 </v-list-item>
               </template>
             </v-list>
@@ -694,6 +700,28 @@ export default {
       this.itemsCarroDB.splice(index, 1);
       this.itemsCarros.splice(index, 1);
     },
+    async deleteFunc(index) {
+      let indexDb = this.selectFunc[index].id;
+      console.log(index);
+      try {
+        axios.post(`http://localhost:3001/api/deleteFunc`, { id: indexDb });
+      } catch (error) {
+        console.log(error);
+      }
+      this.selectFunc.splice(index, 1);
+      this.itemsFunc.splice(index, 1);
+    },
+    async deleteServ(index) {
+      let indexDb = this.selectServ[index].id;
+      console.log(index);
+      try {
+        axios.post(`http://localhost:3001/api/deleteServ`, { id: indexDb });
+      } catch (error) {
+        console.log(error);
+      }
+      this.selectServ.splice(index, 1);
+      this.itemsServico.splice(index, 1);
+    },
     validate() {
       if (this.name !== "" && this.cpf !== "" && this.dtNasc !== "") {
         // cliente
@@ -736,8 +764,6 @@ export default {
       this.ableForm = false;
     },
     async addArray(dialogSelecionado) {
-      // let ult = this.itemsClientDB.length - 1;
-      // let ultCarros = this.itemsCarrosDB.length - 1;
       switch (dialogSelecionado) {
         case 0:
           this.itemsClient.push({
@@ -797,33 +823,51 @@ export default {
 
           break;
         case 2:
-          axios
-            .post("http://localhost:3001/api/insertFunc", {
-              name: this.name,
-              cpf: this.cpf,
-              dtNasc: this.dtNasc,
-              cargo: this.cargo,
-            })
-            .then(
-              this.itemsFunc.push({
-                nomeFunc: this.name,
-                subtitle: `Dt. Nascimento: ${this.dtNasc}, CPF: ${this.cnpj}`,
+          try {
+            await axios
+              .post("http://localhost:3001/api/insertFunc", {
+                name: this.name,
+                cpf: this.cpf,
+                dtNasc: this.dtNasc,
+                cargo: this.cargo,
               })
-            );
+              .then(
+                this.itemsFunc.push({
+                  nomeFunc: this.name,
+                  subtitle: `Dt. Nascimento: ${this.dtNasc}, CPF: ${this.cpf}`,
+                })
+              );
+          } catch (error) {
+            console.log(error);
+          } finally {
+            await axios
+              .get("http://localhost:3001/api/selectFunc")
+              .then((response) => (this.selectFunc = response.data));
+          }
+
           this.resetValidation();
           break;
         case 3:
-          axios
-            .post("http://localhost:3001/api/insertServico", {
-              servico: this.servico,
-              valorPH: this.valorPH,
-            })
-            .then(
-              this.itemsServico.push({
-                nomeServico: this.servico,
-                subtitle: `Nome: ${this.servico}, Cod: ${this.valorPH}`,
+          try {
+            await axios
+              .post("http://localhost:3001/api/insertServico", {
+                servico: this.servico,
+                valorPH: this.valorPH,
               })
-            );
+              .then(
+                this.itemsServico.push({
+                  nomeServico: this.servico,
+                  subtitle: `Nome: ${this.servico}, Cod: ${this.valorPH}`,
+                })
+              );
+          } catch (error) {
+            console.log(error);
+          } finally {
+            await axios
+              .get("http://localhost:3001/api/selectServ")
+              .then((response) => (this.selectServ = response.data));
+          }
+
           this.resetValidation();
           break;
       }
