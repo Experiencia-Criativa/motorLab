@@ -99,6 +99,13 @@ app.get("/api/selectServ", (req, res) => {
   })
 })
 
+app.get("/api/selectEvents", (req, res) => {
+  const sql = "SELECT eventos.id, eventos.nome, eventos.favorito, eventos.cor, eventos.inicio, eventos.fim, clientes.id as cliente_id, clientes.nome as nomeCliente, veiculos.id as veiculo_id, veiculos.modelo, funcionarios.id as funcionario_id, funcionarios.nome as nomeFunc, servicos.id as servico_id, servicos.nome as nomeServ FROM eventos INNER JOIN clientes ON ( clientes.id = cliente_id ) INNER JOIN veiculos ON ( veiculos.id = veiculo_id ) INNER JOIN funcionarios ON ( funcionarios.id = funcionario_id ) INNER JOIN servicos ON ( servicos.id = servico_id )"
+  db.query(sql, (err, result) => {
+    res.send(result)
+  })
+})
+
 // Delete home
 
 app.post("/api/deleteCliente", (req, res) => {
