@@ -358,6 +358,9 @@
                       v-html="item.subtitle"
                     ></v-list-item-subtitle>
                   </v-list-item-content>
+                  <v-btn color="#ededed" icon text @click="deleteCarro(index)">
+                    <v-icon> delete </v-icon>
+                  </v-btn>
                 </v-list-item>
               </template>
             </v-list>
@@ -559,7 +562,8 @@ export default {
       required: (value) => !!value || "Required.",
       counter: (value) => value.length <= 20 || "Max 20 characters",
       email: (value) => {
-        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const pattern =
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return pattern.test(value) || "Invalid e-mail.";
       },
     },
@@ -679,6 +683,17 @@ export default {
       this.itemsClientDB.splice(index, 1);
       this.itemsClient.splice(index, 1);
     },
+    async deleteCarro(index) {
+      let indexDb = this.itemsCarroDB[index].id;
+      console.log(index);
+      try {
+        axios.post(`http://localhost:3001/api/deleteVeiculo`, { id: indexDb });
+      } catch (error) {
+        console.log(error);
+      }
+      this.itemsCarroDB.splice(index, 1);
+      this.itemsCarros.splice(index, 1);
+    },
     validate() {
       if (this.name !== "" && this.cpf !== "" && this.dtNasc !== "") {
         // cliente
@@ -720,7 +735,7 @@ export default {
       this.valid = true;
       this.ableForm = false;
     },
-    addArray(dialogSelecionado) {
+    async addArray(dialogSelecionado) {
       // let ult = this.itemsClientDB.length - 1;
       // let ultCarros = this.itemsCarrosDB.length - 1;
       switch (dialogSelecionado) {
@@ -731,55 +746,53 @@ export default {
           });
           console.log(this.dtNasc);
 
-          axios
-            .post("http://localhost:3001/api/insertCliente", {
-              name: this.name,
-              cpf: this.cpf,
-              dtNasc: this.dtNasc,
-              email: this.email,
-            })
-            .then(function (response) {
-              console.log(response);
-            });
+          try {
+            await axios
+              .post("http://localhost:3001/api/insertCliente", {
+                name: this.name,
+                cpf: this.cpf,
+                dtNasc: this.dtNasc,
+                email: this.email,
+              })
+              .then(function (response) {
+                console.log(response);
+              });
+          } catch (error) {
+            console.log(error);
+          } finally {
+            axios
+              .get("http://localhost:3001/api/selectCliente")
+              .then((response) => (this.itemsClientDB = response.data));
+          }
 
-          // indexDb.newDataBase("clientes", DBobjClient);
-          // this.itemsClientDB.push(DBobjClient);
           this.resetValidation();
           break;
         case 1:
-          // let DBobjCarros = {
-          //   id: this.itemsCarrosDB[ultCarros].id + 1,
-          //   carro: this.modelo,
-          //   clientsName: this.clientsName,
-          //   placa: this.placa,
-          //   ano: this.ano,
-          // };
-
           this.itemsCarros.push({
-            nomeCarro: `${this.carro}`,
+            nomeCarro: `${this.modelo}`,
             subtitle: `Ano: ${this.ano}, Placa: ${this.placa}`,
           });
 
-          // let indexClientCarro = this.itemsClientDB.findIndex(
-          //   (f) => f.nome === this.clientsName
-          // );
+          try {
+            await axios
+              .post("http://localhost:3001/api/insertVeiculos", {
+                modelo: this.modelo,
+                ano: this.ano,
+                placa: this.placa,
+                chassi: this.chassi,
+                cor: this.corVeiculo,
+              })
+              .then(function (response) {
+                console.log(response);
+              });
+          } catch (error) {
+            console.log(error);
+          } finally {
+            await axios
+              .get("http://localhost:3001/api/selectVeiculos")
+              .then((response) => (this.itemsCarroDB = response.data));
+          }
 
-          axios
-            .post("http://localhost:3001/api/insertVeiculos", {
-              modelo: this.modelo,
-              ano: this.ano,
-              placa: this.placa,
-              chassi: this.chassi,
-              cor: this.corVeiculo,
-            })
-            .then(function (response) {
-              console.log(response);
-            });
-
-          // indexDb.adicionaCarroCliente(indexClientCarro, this.carro);
-
-          // indexDb.newDataBase("carros", DBobjCarros);
-          // this.itemsCarrosDB.push(DBobjCarros);
           this.resetValidation();
 
           break;
