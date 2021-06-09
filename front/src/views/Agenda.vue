@@ -144,9 +144,10 @@
           {{ type !== "month" ? "Mes" : "Dia" }}
         </v-btn>
         <v-btn 
-         outlined
+         :outlined="!filtrando"
          class="ma-2" 
          color="white"
+         :style="{ color: filtrando ? 'black' : 'black' }"
          @click="filtrando ? filtrando = false : filtrando = true"
          > Favoritos 
         </v-btn>

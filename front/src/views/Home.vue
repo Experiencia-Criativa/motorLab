@@ -589,12 +589,24 @@ export default {
     //obj IndexDB itensClient
     itemsClientDB: [],
     itemsCarroDB: [],
+    selectFunc: [],
+    selectServ: [],
   }),
   async mounted() {
     try {
       await axios
         .get("http://localhost:3001/api/selectCliente")
         .then((response) => (this.itemsClientDB = response.data));
+      await axios
+        .get("http://localhost:3001/api/selectVeiculos")
+        .then((response) => (this.itemsCarroDB = response.data));
+      await axios
+        .get("http://localhost:3001/api/selectFunc")
+        .then((response) => (this.selectFunc = response.data));
+      await axios
+        .get("http://localhost:3001/api/selectServ")
+        .then((response) => (this.selectServ = response.data));
+
     } catch (err) {
       console.log(err);
     } finally {
@@ -607,6 +619,24 @@ export default {
         this.itemsClient.push({
           nomeCliente: f.nome,
           subtitle: `Dt. Nascimento: ${f.dtNascimento}, CPF: ${f.cpf}`,
+        });
+      });
+      this.itemsCarroDB.forEach((f) => {
+        this.itemsCarros.push({
+          nomeCarro: f.modelo,
+          subtitle: `Placa: ${f.placa}, Ano: ${f.ano}`,
+        });
+      });
+      this.selectFunc.forEach((f) => {
+        this.itemsFunc.push({
+          nomeFunc: f.nome,
+          subtitle: `Dt. Nascimento: ${f.dtNascimento}, CPF: ${f.cpf}`,
+        });
+      });
+      this.selectServ.forEach((f) => {
+        this.itemsServico.push({
+          nomeServico: f.nome,
+          subtitle: `Valor por Hora cobrado: ${f.valorPH}`,
         });
       });
     },
@@ -723,7 +753,7 @@ export default {
           };
 
           this.itemsCarros.push({
-            nomeCarro: `${this.carro} / ${this.clientsName}`,
+            nomeCarro: `${this.carro}`,
             subtitle: `Ano: ${this.ano}, Placa: ${this.placa}`,
           });
 

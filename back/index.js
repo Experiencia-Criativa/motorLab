@@ -68,8 +68,32 @@ app.post("/api/insertFunc", (req, res) => {
   })
 })
 
+// SELECTS HOME
+
 app.get("/api/selectCliente", (req, res) => {
   const sql = "SELECT * FROM `clientes`"
+  db.query(sql, (err, result) => {
+    res.send(result)
+  })
+})
+
+app.get("/api/selectVeiculos", (req, res) => {
+  const sql = "SELECT * FROM `veiculos`"
+  db.query(sql, (err, result) => {
+    res.send(result)
+    console.log(err)
+  })
+})
+
+app.get("/api/selectFunc", (req, res) => {
+  const sql = "SELECT * FROM `funcionarios`"
+  db.query(sql, (err, result) => {
+    res.send(result)
+  })
+})
+
+app.get("/api/selectServ", (req, res) => {
+  const sql = "SELECT * FROM `servicos`"
   db.query(sql, (err, result) => {
     res.send(result)
   })
