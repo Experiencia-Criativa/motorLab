@@ -1,6 +1,35 @@
 <template>
   <div>
     <div>
+      <v-dialog width="500" v-model="historico">
+        <v-card>
+          <v-card-title>
+            Historico
+          </v-card-title>
+          <v-list three-line>
+              <template v-for="(item, index) in events">
+                <v-divider
+                  v-if="item.divider"
+                  :key="index"
+                  :inset="item.inset"
+                ></v-divider>
+
+                <v-list-item v-else :key="item.name">
+                  <v-list-item-avatar color="#741b48">
+                    <span style="color: white">
+                      {{ item.name.substring(0, 2).toUpperCase() }}
+                    </span>
+                  </v-list-item-avatar>
+
+                  <v-list-item-content>
+                    <v-list-item-title>Inicio do evento {{ item.start }}</v-list-item-title>
+                    <v-list-item-subtitle> Fim do evento {{ item.end }} </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-list>
+        </v-card>
+      </v-dialog>
       <v-dialog
         v-model="verEventoDialog"
         width="600"
@@ -151,6 +180,21 @@
          @click="filtrando ? filtrando = false : filtrando = true"
          > Favoritos 
         </v-btn>
+        <v-btn 
+         outlined
+         class="ma-2" 
+         color="white"
+         > 
+         <a target="__blank" style="outline: none;color: white; text-decoration: none;" href="OS.pdf">Relatório</a>
+        </v-btn>
+        <v-btn 
+         outlined
+         class="ma-2" 
+         color="white"
+         @click="historico = true"
+         > 
+         historico
+        </v-btn>
         <v-spacer></v-spacer>
         <v-toolbar-title style="margin-top: 12px" v-if="$refs.calendar">
           {{ $refs.calendar.title }}
@@ -220,6 +264,7 @@ export default {
     favIcon: false,
     filtrando: false,
     criando: false,
+    historico: false,
   }),
   beforeMount() {
     this.getEvents();
