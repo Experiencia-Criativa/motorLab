@@ -20,9 +20,10 @@
                 </v-list-item-avatar>
 
                 <v-list-item-content>
-                  <v-list-item-title
-                    >Inicio do evento {{ item.start }}</v-list-item-title
-                  >
+                  <v-list-item-title> {{ item.name }}</v-list-item-title>
+                  <v-list-item-subtitle>
+                    Inicio do evento {{ item.start }}
+                  </v-list-item-subtitle>
                   <v-list-item-subtitle>
                     Fim do evento {{ item.end }}
                   </v-list-item-subtitle>
@@ -133,27 +134,46 @@
             </v-row>
             <v-row style="padding: 0 15px">
               <v-col>
-                <v-select
+                <v-text-field
                   v-model="formCliente"
                   label="Cliente"
                   :color="iconeColor"
                   :append-icon="iconeTp"
-                  :items="cliente"
-                  @change="veiculoCliente(formCliente)"
                   @keyup="editaEvento"
                 >
-                </v-select>
+                </v-text-field>
               </v-col>
               <v-col>
-                <v-select
+                <v-text-field
                   v-model="formCarro"
                   label="Veículo"
                   :color="iconeColor"
                   :append-icon="iconeTp"
-                  :items="carro"
                   @keyup="editaEvento"
                 >
-                </v-select>
+                </v-text-field>
+              </v-col>
+            </v-row>
+            <v-row style="padding: 0 15px">
+              <v-col>
+                <v-text-field
+                  v-model="formFunc"
+                  label="Cliente"
+                  :color="iconeColor"
+                  :append-icon="iconeTp"
+                  @keyup="editaEvento"
+                >
+                </v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  v-model="formServ"
+                  label="Veículo"
+                  :color="iconeColor"
+                  :append-icon="iconeTp"
+                  @keyup="editaEvento"
+                >
+                </v-text-field>
               </v-col>
             </v-row>
           </v-container>
@@ -222,9 +242,8 @@
 </template>
 
 <script>
-import moment from "moment";
+import axios from "axios";
 import { mask } from "vue-the-mask";
-import indexDb from "../indexedDB/indexdb";
 export default {
   directives: { mask },
   data: () => ({
@@ -240,7 +259,6 @@ export default {
       { text: "Mon - Fri", value: [1, 2, 3, 4, 5] },
       { text: "Mon, Wed, Fri", value: [1, 3, 5] },
     ],
-
     events: [],
     eventoSelecionado: [],
     verEventoDialog: false,
@@ -253,6 +271,8 @@ export default {
     itemsClient: {},
     formCliente: "",
     formCarro: "",
+    formServ: '',
+    formFunc: '',
     carro: [],
     cliente: [],
     colorPicker: {},
@@ -264,29 +284,53 @@ export default {
     filtrando: false,
     criando: false,
     historico: false,
+    // DB
+    selectClient: [],
+    selectVeiculos: [],
+    selectFunc: [],
+    selectServ: [],
+    selectEvents: [],
   }),
-  beforeMount() {
-    this.getEvents();
-    this.getDB();
+  async beforeMount() {
+    try {
+      await axios
+        .get("http://localhost:3001/api/selectCliente")
+        .then((response) => (this.selectClient = response.data));
+      await axios
+        .get("http://localhost:3001/api/selectVeiculos")
+        .then((response) => (this.selectVeiculos = response.data));
+      await axios
+        .get("http://localhost:3001/api/selectFunc")
+        .then((response) => (this.selectFunc = response.data));
+      await axios
+        .get("http://localhost:3001/api/selectServ")
+        .then((response) => (this.selectServ = response.data));
+      await axios
+        .get("http://localhost:3001/api/selectEvents")
+        .then((response) => (this.selectEvents = response.data));
+    } catch (err) {
+      console.log(err);
+    } finally {
+      this.mountEvent()
+    }
+    console.log(this.events)
   },
   methods: {
-    getDB() {
-      indexDb.getDataBase("clientes").then((clientes) => {
-        this.itemsClient = clientes;
-        return this.itemsClient;
-      });
-    },
-    getEvents() {
-      let idGen = Math.floor(Math.random() * 10000000000);
-      this.events.push({
-        name: "Raggi",
-        start: moment().format("YYYY-MM-DD HH:MM"),
-        end: moment().format("YYYY-MM-DD HH:MM"),
-        color: "#ff2976",
-        timed: 1,
-        cliente: "Raggi Izar Neto",
-        carro: "Celta",
-        id: idGen,
+    mountEvent() {
+      this.selectEvents.forEach((f) => {
+        this.events.push({
+          id: f.id,
+          name: f.nome,
+          start: f.inicio,
+          end: f.fim,
+          color: f.cor,
+          timed: 1,
+          cliente: f.nomeCliente,
+          modelo: f.modelo,
+          funcionario: f.nomeFunc,
+          servico: f.nomeServ,
+          favoritos: f.favorito
+        });
       });
     },
     viewDay({ date }) {
@@ -298,7 +342,7 @@ export default {
     },
     verEvento(e) {
       this.verificaFavorito(e.event);
-
+      console.log(e)
       this.criando = false;
       this.iconeColor = "#7d7d7d";
       this.iconeTp = "";
@@ -308,12 +352,10 @@ export default {
       this.dataEventoEntTxt = e.event.start;
       this.dataEventoSaidaTxt = e.event.end;
       this.verEventoDialog = true;
-      this.itemsClient.forEach((element) => {
-        this.cliente.push(element.nome);
-      });
-      this.formCarro = e.event.carro;
+      this.formCarro = e.event.modelo;
       this.formCliente = e.event.cliente;
-      this.veiculoCliente(this.formCliente);
+      this.formFunc = e.event.funcionario;
+      this.formServ = e.event.servico;
     },
     editaEvento(e) {
       this.iconeColor = "#7d7d7d";
@@ -330,7 +372,6 @@ export default {
       }
     },
     salvaEdicaoEvento() {
-      let idGen = Math.floor(Math.random() * 10000000000);
       let index = this.events.findIndex(
         (f) => f.id === this.eventoSelecionado.id
       );
@@ -341,9 +382,9 @@ export default {
         color: this.colorPicker.hex,
         timed: 1,
         cliente: this.formCliente,
-        carro: this.formCarro,
-        id:
-          this.eventoSelecionado.id !== "" ? this.eventoSelecionado.id : idGen,
+        modelo: this.formCarro,
+        funcionario: f.nomeFunc,
+        servico: f.nomeServ
       };
       if (eventos.name !== "" && eventos.start !== "" && eventos.end !== "") {
         if (index === -1) {
@@ -353,19 +394,6 @@ export default {
         }
       }
     },
-    veiculoCliente(nomeCliente) {
-      let clienteSelecionado = this.itemsClient.findIndex(
-        (f) => f.nome === nomeCliente
-      );
-      // this.formCarro = this.itemsClient[clienteSelecionado].carro[0]
-      this.carro = [];
-      if (this.itemsClient[clienteSelecionado] !== undefined) {
-        this.itemsClient[clienteSelecionado].carro.forEach((element) => {
-          this.carro.push(element);
-        });
-      }
-    },
-
     // marcar Evento
 
     agendarEvento(e) {
@@ -376,9 +404,6 @@ export default {
       this.nomeEventoTxt = "";
       this.dataEventoEntTxt = e.date;
       this.dataEventoSaidaTxt = e.date;
-      this.itemsClient.forEach((element) => {
-        this.cliente.push(element.nome);
-      });
       this.formCarro = "";
       this.formCliente = "";
       this.favIcon = false;
