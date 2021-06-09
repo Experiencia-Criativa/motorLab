@@ -472,7 +472,7 @@
               <v-card-title class="text-h5"> Clientes </v-card-title>
 
               <v-card-subtitle
-                >Faça todo o cadastro e manutenção do seus
+                >Faça todo o cadastro e manutenção dos seus
                 clientes</v-card-subtitle
               >
 
@@ -486,7 +486,7 @@
               <v-card-title class="text-h5"> Veículos </v-card-title>
 
               <v-card-subtitle
-                >Faça todo o cadastro de veículo do seus clientes hoje
+                >Faça todo o cadastro de veículos dos seus clientes hoje
                 mesmo</v-card-subtitle
               >
 
@@ -502,8 +502,8 @@
               <v-card-title class="text-h5"> Funcionários </v-card-title>
 
               <v-card-subtitle
-                >Faça todo o cadastro e manutenção do seus
-                clientes</v-card-subtitle
+                >Faça todo o cadastro e manutenção dos seus
+                funcionários</v-card-subtitle
               >
 
               <v-card-actions>
