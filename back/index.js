@@ -99,7 +99,7 @@ app.get("/api/selectServ", (req, res) => {
   })
 })
 
-// Delete
+// Delete home
 
 app.post("/api/deleteCliente", (req, res) => {
   const sql = "DELETE FROM `clientes` WHERE id = (?)"
