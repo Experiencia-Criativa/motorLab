@@ -246,7 +246,7 @@
       <v-dialog v-model="dialogCar" width="600">
         <v-card>
           <v-card-title>
-            Veiculos
+            Veículos
             <v-btn color="#ededed" icon @click="openForm">
               <v-icon> add </v-icon>
             </v-btn>
@@ -396,7 +396,7 @@
 
               <v-text-field
                 v-model="valorPH"
-                label="Veiculo"
+                label="Veículo"
                 maxlength="20"
                 required
                 @keyup="validate"
@@ -480,10 +480,10 @@
           </v-col>
           <v-col cols="6">
             <v-card color="#333" dark style="border-radius: 333" height="200px">
-              <v-card-title class="text-h5"> Veiculos </v-card-title>
+              <v-card-title class="text-h5"> Veículos </v-card-title>
 
               <v-card-subtitle
-                >Faça todo o cadastro de veiculo do seus clientes hoje
+                >Faça todo o cadastro de veículo do seus clientes hoje
                 mesmo</v-card-subtitle
               >
 
@@ -559,8 +559,7 @@ export default {
       required: (value) => !!value || "Required.",
       counter: (value) => value.length <= 20 || "Max 20 characters",
       email: (value) => {
-        const pattern =
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return pattern.test(value) || "Invalid e-mail.";
       },
     },
@@ -606,7 +605,6 @@ export default {
       await axios
         .get("http://localhost:3001/api/selectServ")
         .then((response) => (this.selectServ = response.data));
-
     } catch (err) {
       console.log(err);
     } finally {
@@ -672,11 +670,11 @@ export default {
       }
     },
     async deleteClient(index) {
-      let indexDb = this.itemsClientDB[index].id
+      let indexDb = this.itemsClientDB[index].id;
       try {
-        axios.post(`http://localhost:3001/api/deleteCliente`, {id: indexDb})
+        axios.post(`http://localhost:3001/api/deleteCliente`, { id: indexDb });
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
       this.itemsClientDB.splice(index, 1);
       this.itemsClient.splice(index, 1);

@@ -110,6 +110,15 @@ app.post("/api/deleteCliente", (req, res) => {
   })
 })
 
+app.post("/api/deleteVeiculo", (req, res) => {
+  const sql = "DELETE FROM `veiculos` WHERE id = (?)"
+  const id = req.body.id
+  db.query(sql, [id],(err, result) => {
+    res.send(result)
+    console.log(err)
+  })
+})
+
 
 
 app.listen(3001, () => {
