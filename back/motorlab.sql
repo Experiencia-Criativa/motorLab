@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 07-Jun-2021 às 05:07
+-- Tempo de geração: 09-Jun-2021 às 11:10
 -- Versão do servidor: 10.4.14-MariaDB
 -- versão do PHP: 7.4.10
 
@@ -51,7 +51,9 @@ CREATE TABLE `eventos` (
   `funcionario_id` int(11) NOT NULL,
   `servico_id` int(11) NOT NULL,
   `favorito` smallint(3) NOT NULL,
-  `cor` varchar(20) NOT NULL
+  `cor` varchar(20) NOT NULL,
+  `inicio` varchar(20) NOT NULL,
+  `fim` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -77,7 +79,7 @@ CREATE TABLE `funcionarios` (
 CREATE TABLE `servicos` (
   `id` int(11) NOT NULL,
   `nome` varchar(40) NOT NULL,
-  `valorPH` int(11) NOT NULL
+  `valorPH` float(11,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
