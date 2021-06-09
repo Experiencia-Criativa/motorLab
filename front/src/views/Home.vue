@@ -401,9 +401,10 @@
               ></v-text-field>
 
               <v-text-field
-                v-model="valorPH"
+                v-model.lazy="valorPH"
                 label="Valor por hora"
                 maxlength="20"
+                v-money="money"
                 required
                 @keyup="validate"
               ></v-text-field>
@@ -539,10 +540,11 @@ import swal from "sweetalert2";
 import indexDb from "../indexedDB/indexdb";
 import { mask } from "vue-the-mask";
 import axios from "axios";
+import { VMoney } from 'v-money'
 
 const gradients = [["#ff512f", "#dd2476"]];
 export default {
-  directives: { mask },
+  directives: { mask, money: VMoney },
   component: { swal },
   data: () => ({
     fill: true,
@@ -600,6 +602,15 @@ export default {
     itemsCarroDB: [],
     selectFunc: [],
     selectServ: [],
+
+    money: {
+          decimal: ',',
+          thousands: '.',
+          prefix: 'R$ ',
+          suffix: '',
+          precision: 2,
+          masked: false /* doesn't work with directive */
+        }
   }),
   async mounted() {
     try {
@@ -848,16 +859,19 @@ export default {
           this.resetValidation();
           break;
         case 3:
+          this.valorPH = this.valorPH.replace(`R$`,``)
+          this.valorPH = this.valorPH.replace(`.`,``)
+          this.valorPH = this.valorPH.replace(`,`,`.`)
           try {
             await axios
               .post("http://localhost:3001/api/insertServico", {
                 servico: this.servico,
-                valorPH: this.valorPH,
+                valorPH: parseFloat(this.valorPH),
               })
               .then(
                 this.itemsServico.push({
                   nomeServico: this.servico,
-                  subtitle: `Nome: ${this.servico}, Cod: ${this.valorPH}`,
+                  subtitle: `Valor cobrado por hora: ${this.valorPH}`,
                 })
               );
           } catch (error) {

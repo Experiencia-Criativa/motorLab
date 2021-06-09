@@ -5,6 +5,7 @@ import vuetify from "./plugins/vuetify";
 import moment from "moment";
 import swal from "sweetalert2";
 import { TheMask } from "vue-the-mask";
+import {VMoney} from 'v-money'
 
 Vue.config.productionTip = false;
 
@@ -14,5 +15,6 @@ new Vue({
   vuetify,
   moment,
   swal,
+  VMoney,
   render: (h) => h(App),
 }).$mount("#app");
