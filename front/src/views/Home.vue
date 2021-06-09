@@ -244,7 +244,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <!--===============FIM Dialog Servicos==================-->
+      <!--===============FIM Dialog Funcionario==================-->
       <!--===============Dialog Veiculos=========================-->
       <v-dialog v-model="dialogCar" width="600">
         <v-card>
@@ -394,7 +394,7 @@
             >
               <v-text-field
                 v-model="servico"
-                label="Nome"
+                label="Nome do serviço"
                 maxlength="20"
                 required
                 @keyup="validate"
@@ -402,7 +402,7 @@
 
               <v-text-field
                 v-model="valorPH"
-                label="Veículo"
+                label="Valor por hora"
                 maxlength="20"
                 required
                 @keyup="validate"
