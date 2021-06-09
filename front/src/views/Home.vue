@@ -671,8 +671,13 @@ export default {
         this.ableForm = true;
       }
     },
-    deleteClient(index) {
-      indexDb.deleteDataBase("clientes", this.itemsClientDB[index].id);
+    async deleteClient(index) {
+      let indexDb = this.itemsClientDB[index].id
+      try {
+        axios.post(`http://localhost:3001/api/deleteCliente`, {id: indexDb})
+      } catch (error) {
+        console.log(error)
+      }
       this.itemsClientDB.splice(index, 1);
       this.itemsClient.splice(index, 1);
     },
