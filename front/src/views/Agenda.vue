@@ -3,31 +3,33 @@
     <div>
       <v-dialog width="500" v-model="historico">
         <v-card>
-          <v-card-title>
-            Historico
-          </v-card-title>
+          <v-card-title> Historico </v-card-title>
           <v-list three-line>
-              <template v-for="(item, index) in events">
-                <v-divider
-                  v-if="item.divider"
-                  :key="index"
-                  :inset="item.inset"
-                ></v-divider>
+            <template v-for="(item, index) in events">
+              <v-divider
+                v-if="item.divider"
+                :key="index"
+                :inset="item.inset"
+              ></v-divider>
 
-                <v-list-item v-else :key="item.name">
-                  <v-list-item-avatar color="#741b48">
-                    <span style="color: white">
-                      {{ item.name.substring(0, 2).toUpperCase() }}
-                    </span>
-                  </v-list-item-avatar>
+              <v-list-item v-else :key="item.name">
+                <v-list-item-avatar color="#741b48">
+                  <span style="color: white">
+                    {{ item.name.substring(0, 2).toUpperCase() }}
+                  </span>
+                </v-list-item-avatar>
 
-                  <v-list-item-content>
-                    <v-list-item-title>Inicio do evento {{ item.start }}</v-list-item-title>
-                    <v-list-item-subtitle> Fim do evento {{ item.end }} </v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-              </template>
-            </v-list>
+                <v-list-item-content>
+                  <v-list-item-title
+                    >Inicio do evento {{ item.start }}</v-list-item-title
+                  >
+                  <v-list-item-subtitle>
+                    Fim do evento {{ item.end }}
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-list>
         </v-card>
       </v-dialog>
       <v-dialog
@@ -68,10 +70,10 @@
               </v-card>
             </v-menu>
             <v-btn
-             icon 
-             text 
-             class="iconRight heart" 
-             :style="{ display: criando ? 'none' : '' }"
+              icon
+              text
+              class="iconRight heart"
+              :style="{ display: criando ? 'none' : '' }"
             >
               <v-icon size="26" @click="mudaIcon">
                 {{ favIcon ? "favorite" : "favorite_border" }}
@@ -172,28 +174,25 @@
         >
           {{ type !== "month" ? "Mes" : "Dia" }}
         </v-btn>
-        <v-btn 
-         :outlined="!filtrando"
-         class="ma-2" 
-         color="white"
-         :style="{ color: filtrando ? 'black' : 'black' }"
-         @click="filtrando ? filtrando = false : filtrando = true"
-         > Favoritos 
+        <v-btn
+          :outlined="!filtrando"
+          class="ma-2"
+          color="white"
+          :style="{ color: filtrando ? 'black' : 'black' }"
+          @click="filtrando ? (filtrando = false) : (filtrando = true)"
+        >
+          Favoritos
         </v-btn>
-        <v-btn 
-         outlined
-         class="ma-2" 
-         color="white"
-         > 
-         <a target="__blank" style="outline: none;color: white; text-decoration: none;" href="OS.pdf">Relatório</a>
+        <v-btn outlined class="ma-2" color="white">
+          <a
+            target="__blank"
+            style="outline: none; color: white; text-decoration: none"
+            href="OS.pdf"
+            >Relatório</a
+          >
         </v-btn>
-        <v-btn 
-         outlined
-         class="ma-2" 
-         color="white"
-         @click="historico = true"
-         > 
-         historico
+        <v-btn outlined class="ma-2" color="white" @click="historico = true">
+          historico
         </v-btn>
         <v-spacer></v-spacer>
         <v-toolbar-title style="margin-top: 12px" v-if="$refs.calendar">
@@ -278,7 +277,7 @@ export default {
       });
     },
     getEvents() {
-      let idGen = Math.floor(Math.random() * 10000000000)
+      let idGen = Math.floor(Math.random() * 10000000000);
       this.events.push({
         name: "Raggi",
         start: moment().format("YYYY-MM-DD HH:MM"),
@@ -298,9 +297,9 @@ export default {
       this.focus = "";
     },
     verEvento(e) {
-      this.verificaFavorito(e.event)
+      this.verificaFavorito(e.event);
 
-      this.criando = false
+      this.criando = false;
       this.iconeColor = "#7d7d7d";
       this.iconeTp = "";
       this.colorPicker.hex = e.event.color;
@@ -331,7 +330,7 @@ export default {
       }
     },
     salvaEdicaoEvento() {
-      let idGen = Math.floor(Math.random() * 10000000000)
+      let idGen = Math.floor(Math.random() * 10000000000);
       let index = this.events.findIndex(
         (f) => f.id === this.eventoSelecionado.id
       );
@@ -343,7 +342,8 @@ export default {
         timed: 1,
         cliente: this.formCliente,
         carro: this.formCarro,
-        id: this.eventoSelecionado.id !== '' ? this.eventoSelecionado.id : idGen,
+        id:
+          this.eventoSelecionado.id !== "" ? this.eventoSelecionado.id : idGen,
       };
       if (eventos.name !== "" && eventos.start !== "" && eventos.end !== "") {
         if (index === -1) {
@@ -381,8 +381,8 @@ export default {
       });
       this.formCarro = "";
       this.formCliente = "";
-      this.favIcon = false
-      this.criando = true
+      this.favIcon = false;
+      this.criando = true;
       this.verEventoDialog = true;
     },
     mudaIcon() {
@@ -391,20 +391,22 @@ export default {
           this.favoritos.push(this.eventoSelecionado);
           this.favIcon = true;
         } else {
-          let index =  this.favoritos.findIndex(f => f.id === this.eventoSelecionado.id)
-          this.favoritos.splice(index, 1)
+          let index = this.favoritos.findIndex(
+            (f) => f.id === this.eventoSelecionado.id
+          );
+          this.favoritos.splice(index, 1);
           this.favIcon = false;
         }
       }
     },
     verificaFavorito(event) {
-      let index = this.favoritos.findIndex(f => f.id === event.id)
+      let index = this.favoritos.findIndex((f) => f.id === event.id);
       if (index != -1) {
-        this.favIcon = true
+        this.favIcon = true;
       } else {
-        this.favIcon = false
+        this.favIcon = false;
       }
-    },    
+    },
     deletarEvento(e) {
       let Index = this.events.findIndex((f) => f.name === e.name);
       this.events.splice(Index, 1);
