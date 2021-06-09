@@ -749,22 +749,22 @@ export default {
           this.resetValidation();
           break;
         case 1:
-          let DBobjCarros = {
-            id: this.itemsCarrosDB[ultCarros].id + 1,
-            carro: this.modelo,
-            clientsName: this.clientsName,
-            placa: this.placa,
-            ano: this.ano,
-          };
+          // let DBobjCarros = {
+          //   id: this.itemsCarrosDB[ultCarros].id + 1,
+          //   carro: this.modelo,
+          //   clientsName: this.clientsName,
+          //   placa: this.placa,
+          //   ano: this.ano,
+          // };
 
           this.itemsCarros.push({
             nomeCarro: `${this.carro}`,
             subtitle: `Ano: ${this.ano}, Placa: ${this.placa}`,
           });
 
-          let indexClientCarro = this.itemsClientDB.findIndex(
-            (f) => f.nome === this.clientsName
-          );
+          // let indexClientCarro = this.itemsClientDB.findIndex(
+          //   (f) => f.nome === this.clientsName
+          // );
 
           axios
             .post("http://localhost:3001/api/insertVeiculos", {
@@ -778,10 +778,10 @@ export default {
               console.log(response);
             });
 
-          indexDb.adicionaCarroCliente(indexClientCarro, this.carro);
+          // indexDb.adicionaCarroCliente(indexClientCarro, this.carro);
 
-          indexDb.newDataBase("carros", DBobjCarros);
-          this.itemsCarrosDB.push(DBobjCarros);
+          // indexDb.newDataBase("carros", DBobjCarros);
+          // this.itemsCarrosDB.push(DBobjCarros);
           this.resetValidation();
 
           break;
