@@ -144,6 +144,18 @@ app.post("/api/deleteServ", (req, res) => {
   })
 })
 
+app.post("/api/insertEvent", (req, res) => {
+  const sqlInsert = "INSERT INTO `eventos` (`nome`, `cliente_id`, `veiculo_id`, `funcionario_id`,  `servico_id`, `favorito`, `cor`, `inicio`, `fim`) VALUES (?,2,1,1,1,0,?,?,?);"
+  const nome = req.body.nome
+  const cor = req.body.cor
+  const inicio = req.body.inicio
+  const fim = req.body.fim
+  db.query(sqlInsert, [nome, cor, inicio, fim], (err, result) => {
+    res.send("inserindo")
+    console.log(result)
+    console.log(err)
+  })
+})
 
 
 app.listen(3001, () => {

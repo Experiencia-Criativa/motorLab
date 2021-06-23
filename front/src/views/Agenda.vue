@@ -313,10 +313,10 @@ export default {
     } finally {
       this.mountEvent()
     }
-    console.log(this.events)
   },
   methods: {
     mountEvent() {
+      this.events = []
       this.selectEvents.forEach((f) => {
         this.events.push({
           id: f.id,
@@ -342,7 +342,6 @@ export default {
     },
     verEvento(e) {
       this.verificaFavorito(e.event);
-      console.log(e)
       this.criando = false;
       this.iconeColor = "#7d7d7d";
       this.iconeTp = "";
@@ -371,7 +370,7 @@ export default {
         this.salvaEdicaoEvento();
       }
     },
-    salvaEdicaoEvento() {
+    async salvaEdicaoEvento() {
       let index = this.events.findIndex(
         (f) => f.id === this.eventoSelecionado.id
       );
@@ -383,12 +382,27 @@ export default {
         timed: 1,
         cliente: this.formCliente,
         modelo: this.formCarro,
-        funcionario: f.nomeFunc,
-        servico: f.nomeServ
+        // funcionario: f.nomeFunc,
+        // servico: f.nomeServ
       };
       if (eventos.name !== "" && eventos.start !== "" && eventos.end !== "") {
         if (index === -1) {
-          this.events.push(eventos);
+          try {
+            await axios
+              .post("http://localhost:3001/api/insertEvent", {
+                nome: this.nomeEventoTxt,
+                cor: this.colorPicker.hex,
+                inicio: this.dataEventoEntTxt,
+                fim: this.dataEventoSaidaTxt,
+              })
+          } catch (error) {
+            console.log(error);
+          } finally {
+            await axios
+              .get("http://localhost:3001/api/selectEvents")
+              .then((response) => (this.selectEvents = response.data));
+              this.mountEvent()
+          }
         } else {
           this.events.splice(index, 1, eventos);
         }
